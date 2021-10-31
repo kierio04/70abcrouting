@@ -17,7 +17,7 @@ ReentrySplits = { # Normal is 48
     "HMC": 26,
     "LLL": 10,
     "SSL": 48,
-    "DDD (Close)": 42,
+    "DDD": 42,
     "DDD (Far)": 85,
     "SL": 48,
     "WDW": 48,
@@ -246,8 +246,99 @@ MovementTimes = {
     "3": 73.5, # pause exit to JRB (="V")
 }
 
-HOLPTimes = {
-    "WDW": [300, 0],
+# Shifting Sand Land
+
+SSL = {
+    "standtall": 66.83,
+    "sslreds": 75.47,
+}
+
+# Hazy Maze Cave
+
+HMC = {
+    "metalcap": 56.23,
+    "swimmingbeast": 17.40,
+    "toxicmaze": 72.23,
+    "HMC100": 173.00, # When paired with toxicmaze
+    "metalhead": 66.00,  # Current is 70.10
+}
+
+# Jolly Roger Bay
+
+JRB = {
+    "sunkenship": 78.78,
+    "eelplay": 43.80,
+    "stonepillar": 25.50,
+    "jrbreds": 74.46,
+    "JRB100": 171.00,  # When paired with jetstream
+    "jetstream": 53.87,
+}
+
+# Big Boo's Haunt
+BBH = {
+    "ghosthunt": 54.73,
+    "hauntedbooks": 31.53, # 74.00 without ghost hunt precollected
+    "bbhreds": 95.83,
+    "BBH100": 146.00, # When paired with bbhreds. 160.00 without ghost hunt precollected. current is 173.05
+}
+
+# Dire Dire Docks
+
+DDD = {
+    "chests": 63.70,
+    "bowsersub": 81.27,
+    "mantaray": 35.68,
+}
+
+# Vanish Cap Under the Moat
+VCutM = {
+    "vanishcap": 44.77,
+}
+
+# Bowser in the Fire Sea
+BitFS = {
+    "bitfsreds": 165.00, # Over no reds
+}
+
+# Wet Dry World
+WDW = {
+    "arrowlifts": 13.80,
+    "topoftown": 47.67,
+    "express": 46.00,
+    "quickrace": 61.37,
+    "secrets": 74.10,
+    "WDW100": 118.10, # When paired with secrets. Without HOLP is 130.00. Current is 158.53
+}
+
+# Tiny Huge Island
+THI = {
+    "pluckpiranha": 81.50,
+}
+
+# Tall Tall Mountain
+TTM = {
+    "scalemountain": 30.63,
+    "monkeycage": 59.77,
+    "breathtaking": 29.30,
+    "lonelymushroom": 10.47, # Without HOLP is 17.60
+    "mountainside": 9.13,
+    "ttmreds": 49.00, # Current is 50.83
+    "TTM100": 124.00, # When paired with ttmreds. Without HOLP is 131.00. Current is 133.42 with HOLP / 146.82 without HOLP
+}
+
+# Snowman's Land
+SL = {
+    "whirlpond": 15.60,
+    "chillbully": 12.60,
+    "deepfreeze": 12.07,
+    "slreds": 38.67,
+    "intoigloo": 32.95,
+    "SL100": 70.00, # Current is 94.08
+    "bighead": 59.27,
+}
+
+HOLPTimes = { # Relative timeloss with setup, relative timeloss without setup
+    "WDW": [300, (30*(12+7+7))], # wdw secrets, ttm lonely mushroom, and ttm 100 timelosses
     "BitS": [2755, 0], # Arbitrarily large number given since no such HOLP setup exists yet
     "BitFS": [1372, 20]
 }
@@ -311,116 +402,14 @@ def getDownstairsMovements():
             downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum
         print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 
-# Shifting Sand Land
-
-SSL = {
-    "standtall": 66.83,
-    "sslreds": 75.47,
-}
-
-# Hazy Maze Cave
-
-HMC = {
-    "metalcap": 56.23,
-    "swimmingbeast": 17.40,
-    "toxicmaze": 72.23,
-    "HMC100": 173.00, # When paired with toxicmaze
-    "metalhead": 66.00,  # Current is 70.10
-}
-
-# Jolly Roger Bay
-
-JRB = {
-    "sunkenship": 78.78,
-    "eelplay": 43.80,
-    "stonepillar": 25.50,
-    "jrbreds": 74.46,
-    "JRB100": 171.00,  # When paired with jetstream
-    "jetstream": 53.87,
-}
-
-# Big Boo's Haunt
-BBH = {
-    "ghosthunt": 54.73,
-    "hauntedbooks": 31.53,
-    "hauntedbooks2": 74.00,
-    "bbhreds": 95.83,
-    "BBH100": 146.00, # When paired with jrbreds. current is 173.05
-}
-
-# Dire Dire Docks
-
-DDD = {
-    "chests": 63.70,
-    "bowsersub": 81.27,
-    "mantaray": 35.68,
-}
-
-# Vanish Cap Under the Moat
-VCUTM = {
-    "hmctovcutm": 42.25,
-    "vanishcap": 44.77,
-    "vcutmtojrb": 16.68,
-    "hmctojrb": 9.93,
-}
-
-# Bowser in the Fire Sea
-BITFS = {
-    "bitfsnoreds": 51.00,
-    "bitfsreds": 216.00,
-}
-
-# Wet Dry World
-WDW = {
-    "arrowlifts": 13.80,
-    "topoftown": 47.67,
-    "express": 46.00,
-    "quickrace": 61.37,
-    "secrets": 74.10,
-    "secrets100noholp": 130.00, # Current is 158.53
-    "secrets100holp": 118.10,
-}
-
-# Tiny Huge Island
-THI = {
-    "pluckpiranha": 81.50,
-    "wdwtottm": 8.00, # Estimate
-    "wdwtothi": 11.00, # Estimate
-    "thitottm": 19.50, # Estimate
-}
-
-# Tall Tall Mountain
-TTM = {
-    "scalemountain": 30.63,
-    "monkeycage": 59.77,
-    "breathtaking": 29.30,
-    "lonelymushroomnoholp": 17.60,
-    "lonelymushroomholp": 10.47,
-    "mountainside": 9.13,
-    "ttmreds": 49.00, # Current is 50.83
-    "ttmreds100noholp": 131.00, # Current is 146.82
-    "ttmreds100holp": 124.00, # Current is 133.42
-}
-
-# Snowman's Land
-SL = {
-    "whirlpond": 15.60,
-    "chillbully": 12.60,
-    "deepfreeze": 12.07,
-    "slreds": 38.67,
-    "intoigloo": 32.95,
-    "reds100": 70.00, # Current is 94.08
-    "bighead": 59.27,
-}
-
 Stars = {
     "SSL": SSL,
     "HMC": HMC,
     "JRB": JRB,
     "BBH": BBH,
     "DDD": DDD,
-    "VCutM": VCUTM,
-    "BitFS": BITFS,
+    "VCutM": VCutM,
+    "BitFS": BitFS,
     "WDW": WDW,
     "THI": THI,
     "TTM": TTM,
@@ -444,6 +433,8 @@ Pairs = {
 }
 
 Detours = {
+    "SSL": 0.00,
+    "BitFS": 0.00,
     "BBH": 31.00,
     "VCutM": (1233+ReentryStats["Out"]+pauseexitTime("VCutM")-pauseexitTime("HMC"))/30, # hmctovcutm+vcutmtojrb-hmctojrb
     "THI": 11.00+19.50-8.00 # rough estimates for wdwtothi+thitottm-wdwtottm
@@ -467,25 +458,51 @@ def getStarArrangements(course):
     pairvalues = list(Pairs[course].values())
     for i in range(0, len(starnames)+1):
         best = 99999
+        bestjs = 99999 # Used for jetstreamless
+        bestig = 99999 # Used for intoiglooless
         for arrangement in itertools.combinations(starnames, i):
             arrangepair = list(match(sorted(pairnames), arrangement))
             time = 0
+            
             for j in range(i):
                 time += starvalues[starnames.index(arrangement[j])]
+            
             if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
                         if course in list(Detours.keys()):
                             time += -1*Detours[course]
                         else: time += 99999
+            
+            if course == "BBH":
+                if "ghosthunt" not in arrangement:
+                    if "hauntedbooks" in arrangement: time += 33
+                    if "bbhreds" in arrangement: time += 14
+            if course == "DDD":
+                if "bowsersub" not in arrangement: time += 99999 # Sub is a required star
+                elif "mantaray" in arrangement: time += (ReentrySplits["DDD (Far)"]-ReentrySplits["DDD"])
+                    # Now that we know sub is in, we can assume that if mantaray is in, there will be at least one reentry, and therefore
+                    # one far reentry will replace one close reentry, hence the difference of the two being added to the time regardless
+                    # of numbers of reentries present in the arrangement
+            if course == "JRB":
+                if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
+            
             if str(course+"100") in arrangement: # All 100 coin stuff goes through here no matter what
                 if len(match(pairnames, arrangement)) > 0:
                     time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[pairnames.index(arrangepair[0])]) # 100 coin star time adjustments
-                    time += (i-2)*reentryTime(course)/60
-                    if time < best: best = time
+                    if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
+                    else: time += (i-2)*reentryTime(course)/60
+                    if course == "JRB" and "jetstream" not in arrangement:
+                        if time < bestjs: bestjs = time
+                    if course == "SL" and "intoigloo" not in arrangement:
+                        if time < bestig: bestig = time
+                    elif time < best: best = time
             else:
-                time += (i-1)*reentryTime(course)/60
+                if i < 2: time += 0
+                else: time += (i-1)*reentryTime(course)/60
                 if time < best: best = time
-            print(time, arrangement)
+            time = round(time, 2)
         StarArrangements[course][i] = [best, arrangement]
+        if course == "JRB": StarArrangements[course][str(str(i)+"js")] = [bestjs, arrangement]
+        if course == "SL": StarArrangements[course][str(str(i)+"ig")] = [bestig, arrangement]
     print(StarArrangements[course])
 
 def getAllStarArrangements():
