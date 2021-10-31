@@ -21,7 +21,7 @@ Python port of existing google sheet dedicated to finding the optimal route for 
     - [x] Route classification
         - [x] Basic case
         - [x] HOLP setup times
-- [ ] "Times" page
+- [x] "Times" page
     * Added lists
         - [x] Star times
         - [x] Pairing times
@@ -30,12 +30,12 @@ Python port of existing google sheet dedicated to finding the optimal route for 
         - [x] Basic case
         - [x] 100 coin stars
         - [x] Pause exits 
-        - [ ] Detours - TODO: Add WDW/TTM differences
-        - [ ] Re-entries - TODO: DDD close/far entry
-    - [ ] Route filtering
+        - [x] Detours - TODO: Add WDW/TTM differences
+        - [x] Re-entries - TODO: DDD close/far entry
+    - [x] Route filtering
         - [x] 100 coin stars
-        - [ ] Unlocked stars - e.g. JRB
-        - [ ] Required stars - e.g. DDD
+        - [x] Unlocked stars - e.g. JRB
+        - [x] Required stars - e.g. DDD
 - [ ] "Routes" page
     * Added lists
         - [ ] Starcount route data
