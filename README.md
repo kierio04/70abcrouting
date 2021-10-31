@@ -21,7 +21,7 @@ Python port of existing google sheet dedicated to finding the optimal route for 
     - [x] Route classification
         - [x] Basic case
         - [x] HOLP setup times
-- [] "Times" page
+- [ ] "Times" page
     * Added lists
         - [x] Star times
         - [x] Pairing times
@@ -30,38 +30,36 @@ Python port of existing google sheet dedicated to finding the optimal route for 
         - [x] Basic case
         - [x] 100 coin stars
         - [x] Pause exits 
-        - [] Detours - TODO: Add WDW/TTM differences
-        - [] Re-entries - TODO: DDD close/far entry
-    - [] Route filtering
+        - [ ] Detours - TODO: Add WDW/TTM differences
+        - [ ] Re-entries - TODO: DDD close/far entry
+    - [ ] Route filtering
         - [x] 100 coin stars
-        - [] Unlocked stars - e.g. JRB
-        - [] Required stars - e.g. DDD
-- [] "Routes" page
+        - [ ] Unlocked stars - e.g. JRB
+        - [ ] Required stars - e.g. DDD
+- [ ] "Routes" page
     * Added lists
-        - [] Starcount route data
-    - [] Downstairs
-        - [] Route classification
-            - [] Basic case
-            - [] Early DDD
-        - [] Route filtering
-            - [] Star counts 
-            - [] Vanish cap - incl. detour
-            - [] Metal cap - incl. timestop
-    - [] Upstairs
-        - [] Route classification
-            - [] Basic case
-            - [] Referencing downstairs stars
-        - [] Route filtering
-            - [] Star counts
-            - [] Vanish cap
-            - [] 
-- [] "Full" page
-    - [] Course lists
-    - [] Course insert format
-    - [] Referencing starcount route data
-- [] Final info summary
-    - [] Table using starcount route data
-    - [] Star cuts display
-    - [] Starcount route display
-    - [] Vanish cap and metal cap
-    - [] "Full" page course order display
+        - [ ] Starcount route data
+    - [ ] Downstairs
+        - [ ] Route classification
+            - [ ] Basic case
+            - [ ] Early DDD
+        - [ ] Route filtering
+            - [ ] Star counts 
+            - [ ] Vanish cap - incl. detour
+            - [ ] Metal cap - incl. timestop
+    - [ ] Upstairs
+        - [ ] Route classification
+            - [ ] Referencing downstairs stars
+        - [ ] Route filtering
+            - [ ] Star counts
+            - [ ] Vanish cap
+            - [ ] 
+- [ ] "Full" page
+    - [ ] Course lists
+    - [ ] Course insert format
+    - [ ] Referencing starcount route data
+- [ ] Final info summary
+    - [ ] Table using starcount route data
+    - [ ] Starcount route display
+    - [ ] Vanish cap and metal cap
+    - [ ] "Full" page course order display
