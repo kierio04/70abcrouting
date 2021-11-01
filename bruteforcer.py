@@ -440,7 +440,7 @@ Detours = {
     "THI": 11.00+19.50-8.00 # rough estimates for wdwtothi+thitottm-wdwtottm
 }
 
-StarArrangements = {}
+Arr = {} # Shorthand for "Star Arrangements"
 
 def match(list1, list2):
     return_list = []
@@ -451,7 +451,7 @@ def match(list1, list2):
     return return_list
 
 def getStarArrangements(course):
-    StarArrangements[course] = {}
+    Arr[course] = {}
     starnames = list(Stars[course].keys())
     starvalues = list(Stars[course].values())
     pairnames = list(Pairs[course].keys())
@@ -460,6 +460,7 @@ def getStarArrangements(course):
         best = 99999
         bestjs = 99999 # Used for jetstreamless
         bestig = 99999 # Used for intoiglooless
+        bestuk = 99999 # Used for monkeycageless
         for arrangement in itertools.combinations(starnames, i):
             arrangepair = list(match(sorted(pairnames), arrangement))
             time = 0
@@ -491,27 +492,36 @@ def getStarArrangements(course):
                     if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
                     else: time += (i-2)*reentryTime(course)/60
                     if course == "JRB" and "jetstream" not in arrangement:
-                        if time < bestjs: bestjs = time
-                    if course == "SL" and "intoigloo" not in arrangement:
-                        if time < bestig: bestig = time
-                    elif time < best: best = time
+                        if time < bestjs: bestjs = time # Tracking jetstreamless routes
+                    elif course == "SL" and "intoigloo" not in arrangement:
+                        if time < bestig: bestig = time # Tracking intoiglooless routes
+                    elif course == "TTM" and "monkeycage" not in arrangement:
+                        if time < bestuk: bestuk = time
+                    if time < best: best = time
             else:
                 if i < 2: time += 0
                 else: time += (i-1)*reentryTime(course)/60
                 if time < best: best = time
             time = round(time, 2)
-        StarArrangements[course][i] = [best, arrangement]
-        if course == "JRB": StarArrangements[course][str(str(i)+"js")] = [bestjs, arrangement]
-        if course == "SL": StarArrangements[course][str(str(i)+"ig")] = [bestig, arrangement]
-    print(StarArrangements[course])
+        Arr[course][i] = [best, arrangement]
+        if course == "JRB": Arr[course][str(str(i)+"js")] = [bestjs, arrangement]
+        if course == "SL": Arr[course][str(str(i)+"ig")] = [bestig, arrangement]
+        if course == "TTM": Arr[course][str(str(i)+"uk")] = [bestuk, arrangement]
+    print(Arr[course])
 
 def getAllStarArrangements():
     for i in range(len(Stars)):
         getStarArrangements(list(Stars.keys())[i])
+    
+def getStarCombinations():
+    for combin in itertools.product(Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
+        print(combin)
 
 if __name__ == "__main__":
     getAllStarArrangements()
+    getStarCombinations()
 else:
     getUpstairsMovements()
     print("")
     getDownstairsMovements()
+    print("")
