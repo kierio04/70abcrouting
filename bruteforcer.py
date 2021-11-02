@@ -478,6 +478,7 @@ def getStarArrangements(course):
         bestjsnum = 99999 # Used for jetstreamless
         bestignum = 99999 # Used for intoiglooless
         bestuknum = 99999 # Used for monkeycageless
+        count = 0
         for arrangement in itertools.combinations(starnames, i):
             arrangepair = list(match(sorted(pairnames), arrangement))
             time = 0
@@ -498,6 +499,20 @@ def getStarArrangements(course):
             if course == "JRB":
                 if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
             
+            if course == "JRB" and "jetstream" not in arrangement:
+                    if time < bestjsnum:  # Tracking jetstreamless routes
+                        bestjsnum = time
+                        bestjstext = arrangement
+                    count += 1
+            elif course == "SL" and "intoigloo" not in arrangement:
+                    if time < bestignum:  # Tracking intoiglooless routes
+                        bestignum = time
+                        bestigtext = arrangement
+            elif course == "TTM" and "monkeycage" not in arrangement:
+                    if time < bestuknum:  # Tracking ukikistarless routes
+                        bestuknum = time
+                        bestuktext = arrangement
+
             if str(course+"100") in arrangement: # All 100 coin stuff goes through here no matter what
                 if match(pairnames, arrangement)[0] == "Empty":
                     time += 99999
@@ -509,18 +524,6 @@ def getStarArrangements(course):
                         bestnum = time
                         besttext = arrangement
             else:
-                if course == "JRB" and "jetstream" not in arrangement:
-                    if time < bestjsnum:  # Tracking jetstreamless routes
-                        bestjsnum = time
-                        bestjstext = arrangement
-                elif course == "SL" and "intoigloo" not in arrangement:
-                    if time < bestignum:  # Tracking intoiglooless routes
-                        bestignum = time
-                        bestigtext = arrangement
-                elif course == "TTM" and "monkeycage" not in arrangement:
-                    if time < bestuknum:  # Tracking ukikistarless routes
-                        bestuknum = time
-                        bestuktext = arrangement
                 if i < 2: time += 0
                 else: time += (i-1)*reentryTime(course)/60
                 if time < bestnum:
@@ -528,9 +531,9 @@ def getStarArrangements(course):
                     besttext = arrangement
             time = round(time, 2)
         Arr[course][i] = [bestnum, besttext]
-        if course == "JRB": Arr[course][str(str(i)+"js")] = [bestjsnum, bestjstext]
-        if course == "SL": Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext]
-        if course == "TTM": Arr[course][str(str(i)+"uk")] = [bestuknum, bestuktext]
+        if course == "JRB" and i<len(starnames): Arr[course][str(str(i)+"js")] = [bestjsnum, bestjstext] # i restriction prevents the "less stars being collected than it thinks" bug
+        if course == "SL" and i<len(starnames): Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext]
+        if course == "TTM" and i<len(starnames): Arr[course][str(str(i)+"uk")] = [bestuknum, bestuktext]
     print(Arr[course])
 
 def getAllStarArrangements():
@@ -624,4 +627,3 @@ else:
     print("")
     getStarCombinations()
     print("")
-    getStarArrangements("JRB")
