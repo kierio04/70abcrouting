@@ -36,7 +36,7 @@ Python port of existing google sheet dedicated to finding the optimal route for 
         - [x] 100 coin stars
         - [x] Unlocked stars - e.g. JRB
         - [x] Required stars - e.g. DDD
-- [ ] "Routes" page
+- [ ] "Routes" page - this will be completely rewritten once I've actually finish work on this (I simplified it a ton)
     * Added lists
         - [ ] Starcount route data
     - [ ] Downstairs
