@@ -246,6 +246,24 @@ MovementTimes = {
     "3": 73.5, # pause exit to JRB (="V")
 }
 
+# Bob-omb Battlefield
+
+BoB = {
+    "koopathequick": 81.00,
+    "chainchomp": 25.53,
+    "island": 31.20,
+    "bobreds": 70.10,
+    "BoB100": 121.10 # When paired with bobreds
+}
+
+# Whomp's Fortress
+
+WF = {
+    "tower": 92.28,
+    "wfreds": 38.87,
+    "WF100": 92.28 # When paired with tower
+}
+
 # Shifting Sand Land
 
 SSL = {
@@ -257,7 +275,6 @@ SSL = {
 
 HMC = {
     "metalcap": 56.23,
-    "swimmingbeast": 17.40,
     "toxicmaze": 72.23,
     "HMC100": 173.00, # When paired with toxicmaze
     "metalhead": 66.00,  # Current is 70.10
@@ -268,7 +285,6 @@ HMC = {
 JRB = {
     "sunkenship": 78.78,
     "eelplay": 43.80,
-    "stonepillar": 25.50,
     "jrbreds": 74.46,
     "JRB100": 171.00,  # When paired with jetstream
     "jetstream": 53.87,
@@ -286,8 +302,6 @@ BBH = {
 
 DDD = {
     "chests": 63.70,
-    "bowsersub": 81.27,
-    "mantaray": 35.68,
 }
 
 # Vanish Cap Under the Moat
@@ -302,7 +316,6 @@ BitFS = {
 
 # Wet Dry World
 WDW = {
-    "arrowlifts": 13.80,
     "topoftown": 47.67,
     "express": 46.00,
     "quickrace": 61.37,
@@ -317,20 +330,14 @@ THI = {
 
 # Tall Tall Mountain
 TTM = {
-    "scalemountain": 30.63,
     "monkeycage": 59.77,
-    "breathtaking": 29.30,
-    "lonelymushroom": 10.47, # Without HOLP is 17.60
-    "mountainside": 9.13,
+    # Lonely Mushroom: With HOLP is 10.47, Without HOLP is 17.60
     "ttmreds": 49.00, # Current is 50.83
     "TTM100": 124.00, # When paired with ttmreds. Without HOLP is 131.00. Current is 133.42 with HOLP / 146.82 without HOLP
 }
 
 # Snowman's Land
 SL = {
-    "whirlpond": 15.60,
-    "chillbully": 12.60,
-    "deepfreeze": 12.07,
     "slreds": 38.67,
     "intoigloo": 32.95,
     "SL100": 70.00, # Current is 94.08
@@ -403,6 +410,8 @@ def getDownstairsMovements():
         print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 
 Stars = {
+    "BoB": BoB,
+    "WF": WF,
     "SSL": SSL,
     "HMC": HMC,
     "JRB": JRB,
@@ -416,9 +425,17 @@ Stars = {
     "SL": SL,
 }
 
+def getCombinationTotal():
+    totals = 1
+    for i in OrderedDict(Stars):
+        totals = totals*(len(Stars[i])+1)
+    print(totals*8)
+
 # Alternate 100 Coin Pairing Times
 
 Pairs = {
+    "BoB": {"bobreds": 0.00},
+    "WF": {"tower": 0.00, "wfreds": -11.08},
     "SSL": {},
     "HMC": {"toxicmaze": 0.00},
     "JRB": {"jrbreds": 14.00, "jetstream": 0.00},
@@ -432,8 +449,7 @@ Pairs = {
     "SL": {"slreds": 0.00}
 }
 
-Detours = {
-    "SSL": 0.00,
+Detours = { # The following are the courses that have no hard confirmed stars
     "BitFS": 0.00,
     "BBH": 31.00,
     "VCutM": (1233+ReentryStats["Out"]+pauseexitTime("VCutM")-pauseexitTime("HMC"))/30, # hmctovcutm+vcutmtojrb-hmctojrb
@@ -471,18 +487,11 @@ def getStarArrangements(course):
             if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
                         if course in list(Detours.keys()):
                             time += -1*Detours[course]
-                        else: time += 99999
             
             if course == "BBH":
                 if "ghosthunt" not in arrangement:
                     if "hauntedbooks" in arrangement: time += 33
                     if "bbhreds" in arrangement: time += 14
-            if course == "DDD":
-                if "bowsersub" not in arrangement: time += 99999 # Sub is a required star
-                elif "mantaray" in arrangement: time += (ReentrySplits["DDD (Far)"]-ReentrySplits["DDD"])
-                    # Now that we know sub is in, we can assume that if mantaray is in, there will be at least one reentry, and therefore
-                    # one far reentry will replace one close reentry, hence the difference of the two being added to the time regardless
-                    # of numbers of reentries present in the arrangement
             if course == "JRB":
                 if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
             
@@ -512,16 +521,40 @@ def getStarArrangements(course):
 def getAllStarArrangements():
     for i in range(len(Stars)):
         getStarArrangements(list(Stars.keys())[i])
-    
+
 def getStarCombinations():
-    for combin in itertools.product(Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
-        print(combin)
+    best = 99999
+    count = 0
+    upper = 100000
+    for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
+        total = 0
+        JS, UK, IG = False, False, False
+        combin_abridged = list(combin)
+        if "js" in str(combin_abridged[4]): 
+            JS = True
+            combin_abridged[4]=str(combin_abridged[4]).removesuffix("js")
+        if "uk" in str(combin_abridged[11]):
+            UK = True
+            combin_abridged[11]=str(combin_abridged[11]).removesuffix("uk")
+        if "ig" in str(combin_abridged[12]):
+            IG = True
+            combin_abridged[12]=str(combin_abridged[12]).removesuffix("ig")
+        for x in range(len(combin_abridged)):
+            total += int(combin_abridged[x])
+        if total+40 == 70: print(total, combin)
+        count += 1
+        if count >= upper:
+            print(count/1000000, "million")
+            upper += 100000
 
 if __name__ == "__main__":
-    getAllStarArrangements()
-    getStarCombinations()
-else:
+    getCombinationTotal()
+    print("")
     getUpstairsMovements()
     print("")
     getDownstairsMovements()
+    print("")
+    getAllStarArrangements()
+    getStarCombinations()
+else:
     print("")
