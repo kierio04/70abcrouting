@@ -459,11 +459,12 @@ Detours = { # The following are the courses that have no hard confirmed stars
 Arr = {} # Shorthand for "Star Arrangements"
 
 def match(list1, list2):
-    return_list = []
+    return_list = ["Empty"]
     for x in range(len(list1)):
         for y in range(0, len(list2)):
             if list1[x]==list2[y]:
                 return_list.append(str(list1[x]))
+    if len(return_list)>1: return_list.remove("Empty")
     return return_list
 
 def getStarArrangements(course):
@@ -473,10 +474,10 @@ def getStarArrangements(course):
     pairnames = list(Pairs[course].keys())
     pairvalues = list(Pairs[course].values())
     for i in range(0, len(starnames)+1):
-        best = 99999
-        bestjs = 99999 # Used for jetstreamless
-        bestig = 99999 # Used for intoiglooless
-        bestuk = 99999 # Used for monkeycageless
+        bestnum = 99999
+        bestjsnum = 99999 # Used for jetstreamless
+        bestignum = 99999 # Used for intoiglooless
+        bestuknum = 99999 # Used for monkeycageless
         for arrangement in itertools.combinations(starnames, i):
             arrangepair = list(match(sorted(pairnames), arrangement))
             time = 0
@@ -488,6 +489,8 @@ def getStarArrangements(course):
                         if course in list(Detours.keys()):
                             time += -1*Detours[course]
             
+            if course == "BoB":
+                if "koopathequick" not in arrangement and ("island" in arrangement or "bobreds" in arrangement or "chainchomp" in arrangement): time += 99999
             if course == "BBH":
                 if "ghosthunt" not in arrangement:
                     if "hauntedbooks" in arrangement: time += 33
@@ -496,26 +499,38 @@ def getStarArrangements(course):
                 if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
             
             if str(course+"100") in arrangement: # All 100 coin stuff goes through here no matter what
-                if len(match(pairnames, arrangement)) > 0:
+                if match(pairnames, arrangement)[0] == "Empty":
+                    time += 99999
+                else:
                     time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[pairnames.index(arrangepair[0])]) # 100 coin star time adjustments
                     if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
                     else: time += (i-2)*reentryTime(course)/60
-                    if course == "JRB" and "jetstream" not in arrangement:
-                        if time < bestjs: bestjs = time # Tracking jetstreamless routes
-                    elif course == "SL" and "intoigloo" not in arrangement:
-                        if time < bestig: bestig = time # Tracking intoiglooless routes
-                    elif course == "TTM" and "monkeycage" not in arrangement:
-                        if time < bestuk: bestuk = time
-                    if time < best: best = time
+                    if time < bestnum: 
+                        bestnum = time
+                        besttext = arrangement
             else:
+                if course == "JRB" and "jetstream" not in arrangement:
+                    if time < bestjsnum:  # Tracking jetstreamless routes
+                        bestjsnum = time
+                        bestjstext = arrangement
+                elif course == "SL" and "intoigloo" not in arrangement:
+                    if time < bestignum:  # Tracking intoiglooless routes
+                        bestignum = time
+                        bestigtext = arrangement
+                elif course == "TTM" and "monkeycage" not in arrangement:
+                    if time < bestuknum:  # Tracking ukikistarless routes
+                        bestuknum = time
+                        bestuktext = arrangement
                 if i < 2: time += 0
                 else: time += (i-1)*reentryTime(course)/60
-                if time < best: best = time
+                if time < bestnum:
+                    bestnum = time
+                    besttext = arrangement
             time = round(time, 2)
-        Arr[course][i] = [best, arrangement]
-        if course == "JRB": Arr[course][str(str(i)+"js")] = [bestjs, arrangement]
-        if course == "SL": Arr[course][str(str(i)+"ig")] = [bestig, arrangement]
-        if course == "TTM": Arr[course][str(str(i)+"uk")] = [bestuk, arrangement]
+        Arr[course][i] = [bestnum, besttext]
+        if course == "JRB": Arr[course][str(str(i)+"js")] = [bestjsnum, bestjstext]
+        if course == "SL": Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext]
+        if course == "TTM": Arr[course][str(str(i)+"uk")] = [bestuknum, bestuktext]
     print(Arr[course])
 
 def getAllStarArrangements():
@@ -599,13 +614,14 @@ def getStarCombinations():
             upper += 1000000
 
 if __name__ == "__main__":
+    getAllStarArrangements()
+else:
     getCombinationTotal()
     print("")
     getUpstairsMovements()
     print("")
     getDownstairsMovements()
     print("")
-    getAllStarArrangements()
     getStarCombinations()
-else:
     print("")
+    getStarArrangements("JRB")
