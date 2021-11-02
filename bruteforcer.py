@@ -523,11 +523,44 @@ def getAllStarArrangements():
         getStarArrangements(list(Stars.keys())[i])
 
 def getStarCombinations():
-    best = 99999
+    bestnum = 99999
+    bestbitfsholpnum = 99999
+    bestearlydddnum = 99999
+    fail = 0
     count = 0
-    upper = 100000
+    upper = 1000000
+    file_name = "seventyabcexport.txt"
+
+    def export_results(etext):
+        export = open(file_name, "a")
+        export.writelines(etext)
+        export.write("\n")
+        export.close()
+
     for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
         total = 0
+
+        total_data = []
+        total_data.append(Arr["BoB"][combin[0]])
+        total_data.append(Arr["WF"][combin[1]])
+        total_data.append(Arr["SSL"][combin[2]])
+        total_data.append(Arr["HMC"][combin[3]])
+        total_data.append(Arr["JRB"][combin[4]])
+        total_data.append(Arr["BBH"][combin[5]])
+        total_data.append(Arr["DDD"][combin[6]])
+        total_data.append(Arr["VCutM"][combin[7]])
+        total_data.append(Arr["BitFS"][combin[8]])
+        total_data.append(Arr["WDW"][combin[9]])
+        total_data.append(Arr["THI"][combin[10]])
+        total_data.append(Arr["TTM"][combin[11]])
+        total_data.append(Arr["SL"][combin[12]])
+
+        total_text = []
+        total_values = []
+        for i in range(len(total_data)):
+            total_text.append(total_data[i][1])
+            total_values.append(total_data[i][0])
+
         JS, UK, IG = False, False, False
         combin_abridged = list(combin)
         if "js" in str(combin_abridged[4]): 
@@ -541,11 +574,29 @@ def getStarCombinations():
             combin_abridged[12]=str(combin_abridged[12]).removesuffix("ig")
         for x in range(len(combin_abridged)):
             total += int(combin_abridged[x])
-        if total+40 == 70: print(total, combin)
-        count += 1
+
+        if total+40 == 70:
+            if int(combin[7]) == 0 and IG == False:
+                fail += 1
+            else:
+                if sum(total_values) < bestnum:
+                    bestnum = sum(total_values)
+                    besttext = total_text
+                    export_results(["Best:", str(bestnum), str(besttext)])
+                if 29+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[2])+int(combin_abridged[3])+int(combin_abridged[4])+int(combin_abridged[5])+int(combin_abridged[6])+int(combin_abridged[7])>=50 and UK==True: # BitFS HOLP Route
+                    if sum(total_values) < bestbitfsholpnum:
+                        bestbitfsholpnum = sum(total_values)
+                        bestbitfsholptext = total_text
+                        export_results(["BitFS HOLP:", str(bestbitfsholpnum), str(bestbitfsholptext)])
+                if 16+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[4])+int(combin_abridged[5])<=30 and JS==True: # Early DDD Routes
+                    if sum(total_values) < bestearlydddnum:
+                        bestearlydddnum = sum(total_values)
+                        bestearlydddtext = total_text
+                        export_results(["Early DDD:", str(bestearlydddnum), str(bestearlydddtext)])
+        count = count + 1
         if count >= upper:
             print(count/1000000, "million")
-            upper += 100000
+            upper += 1000000
 
 if __name__ == "__main__":
     getCombinationTotal()
