@@ -244,6 +244,11 @@ MovementTimes = {
     "1": 319, # HMC to VCutM
     "2": 243, # 2 JRB Detour
     "3": 73.5, # pause exit to JRB (="V")
+    "4": 51, # enter JRB door
+    "5": 224, # jrb door to jrb
+    "6": 441, # jrb to jrb door
+    "7": 61, # exit JRB door
+    "8": 80, # cotmc timestop
 }
 
 # Bob-omb Battlefield
@@ -277,7 +282,7 @@ HMC = {
     "metalcap": 56.23,
     "toxicmaze": 72.23,
     "HMC100": 173.00, # When paired with toxicmaze
-    "metalhead": 66.00,  # Current is 70.10
+    "metalhead": 49.57,  # Current is 70.10
 }
 
 # Jolly Roger Bay
@@ -287,7 +292,7 @@ JRB = {
     "eelplay": 43.80,
     "jrbreds": 74.46,
     "JRB100": 171.00,  # When paired with jetstream
-    "jetstream": 53.87,
+    "jetstream": 53.87+MovementTimes["8"],
 }
 
 # Big Boo's Haunt
@@ -320,7 +325,7 @@ WDW = {
     "express": 46.00,
     "quickrace": 61.37,
     "secrets": 74.10,
-    "WDW100": 118.10, # When paired with secrets. Without HOLP is 130.00. Current is 158.53
+    "WDW100": 118.10-6.00, # When paired with secrets. Without HOLP is 130.00. Current is 158.53. 6.00 is the timeloss top/solo secrets would get if they had to set up the HOLP for BitS
 }
 
 # Tiny Huge Island
@@ -350,65 +355,6 @@ HOLPTimes = { # Relative timeloss with setup, relative timeloss without setup
     "BitFS": [1372, 20]
 }
 
-def holpTime(course):
-    if course == "WDW": return HOLPTimes["WDW"][0] + HOLPTimes["BitS"][1] + HOLPTimes["BitFS"][1]
-    elif course == "BitS": return HOLPTimes["WDW"][1] + HOLPTimes["BitS"][0] + HOLPTimes["BitFS"][1]
-    elif course == "BitFS": return HOLPTimes["WDW"][1] + HOLPTimes["BitS"][1] + HOLPTimes["BitFS"][0]
-
-downlist = [
-    [
-        ["BitFS (MIPS restricted)", [0], [bestofallnum], "BitFS"],
-        ["WDW (MIPS restricted)", [0], [wdwresnum], "WDW"],
-        ["WDW", [1, 2, 3, 4, 5, 6, 7, 8, 9], [twovisitwdwresnum, 
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum), 
-            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum), 
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
-            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
-            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum)], "WDW"],
-        ["WDW (No DDD early)", [1, 2, 3], [twovisitwdwresnum, 
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum), 
-            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum)], "WDW"],
-        ["No Preset (MIPS restricted)", [0], [bestofallnum], "BitS"],
-        ["No Preset", [2, 3, 4, 5, 6, 7, 8, 9], [min(twovisitnum, twovisit2wdwnum), 
-            min(twovisitslresnum, twovisit2wdwslresnum), 
-            min(twovisitnum, twovisit2wdwnum),
-            min(twovisitnum, twovisit2wdwnum),
-            min(twovisitslresnum, twovisit2wdwslresnum),
-            min(twovisitslresnum, twovisit2wdwslresnum),
-            min(twovisitnum, twovisit2wdwnum),
-            min(twovisitnum, twovisit2wdwnum)], "BitS"],
-        ["No Preset (No DDD early)", [2, 3], [min(twovisitnum, twovisit2wdwnum), 
-            min(twovisitslresnum, twovisit2wdwslresnum), 
-            min(twovisitnum, twovisit2wdwnum)], "BitS"]
-    ],
-    [
-        ["Original", ["A", "B", "D", "E", "K", "W", "X", "Y", "Z", "1"]],
-        ["Classic", ["0", "D", "E", "F", "G", "H", "I", "J", "K", "W", "X", "Y", "Z", "1"]],
-        ["Why", ["0", "C", "D", "F", "G", "H", "I", "J", "K", "W", "X", "1", "L"], ],
-        ["Late VC", ["0", "F", "G", "H", "I", "J", "K", "M", "O", "W", "X", "Y", "Z"]],
-        ["2 JRB A", ["0", "A", "D", "H", "K", "M", "Q", "R", "T", "U", "Z", "2"]],
-        ["2 JRB A1", ["0", "A", "D", "H", "M", "T", "U", "V", "W", "X", "Z", "2"]],
-        ["2 JRB B", ["0", "D", "G", "H", "K", "Q", "R", "Z", "1", "U", "2"]],
-        ["2 JRB B1", ["0", "D", "G", "H", "V", "W", "X", "Z", "1", "U", "2"]],
-        ["2 JRB C", ["0", "A", "B", "C", "D", "F", "K", "L", "Q", "R", "W", "1", "2"]],
-        ["2 JRB C1", ["0", "A", "B", "C", "D", "F", "L", "V", "W", "W", "X", "1", "2"]]
-    ]
-]
-downlist2 = {}
-
-def getDownstairsMovements():
-    for i in range(len(downlist[0])):
-        downlist2[downlist[0][i][0]] = {}
-        for j in range(len(downlist[0][i][1])):
-            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3])
-            for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
-                sum += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
-            downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum
-        print(downlist[0][i][0], downlist2[downlist[0][i][0]])
-
 Stars = {
     "BoB": BoB,
     "WF": WF,
@@ -428,8 +374,10 @@ Stars = {
 def getCombinationTotal():
     totals = 1
     for i in OrderedDict(Stars):
-        totals = totals*(len(Stars[i])+1)
-    print(totals*8)
+        sum = (len(Stars[i])+1)
+        if i == "TTM" or i == "SL": sum = sum + (len(Stars[i]))
+        totals = totals * sum
+    print(totals)
 
 # Alternate 100 Coin Pairing Times
 
@@ -475,7 +423,6 @@ def getStarArrangements(course):
     pairvalues = list(Pairs[course].values())
     for i in range(0, len(starnames)+1):
         bestnum = 99999
-        bestjsnum = 99999 # Used for jetstreamless
         bestignum = 99999 # Used for intoiglooless
         bestuknum = 99999 # Used for monkeycageless
         count = 0
@@ -487,8 +434,8 @@ def getStarArrangements(course):
                 time += starvalues[starnames.index(arrangement[j])]
             
             if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
-                        if course in list(Detours.keys()):
-                            time += -1*Detours[course]
+                if course in list(Detours.keys()):
+                    time += -1*Detours[course]
             
             if course == "BoB":
                 if "koopathequick" not in arrangement and ("island" in arrangement or "bobreds" in arrangement or "chainchomp" in arrangement): time += 99999
@@ -498,13 +445,8 @@ def getStarArrangements(course):
                     if "bbhreds" in arrangement: time += 14
             if course == "JRB":
                 if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
-            
-            if course == "JRB" and "jetstream" not in arrangement:
-                    if time < bestjsnum:  # Tracking jetstreamless routes
-                        bestjsnum = time
-                        bestjstext = arrangement
-                    count += 1
-            elif course == "SL" and "intoigloo" not in arrangement:
+
+            if course == "SL" and "intoigloo" not in arrangement:
                     if time < bestignum:  # Tracking intoiglooless routes
                         bestignum = time
                         bestigtext = arrangement
@@ -519,20 +461,19 @@ def getStarArrangements(course):
                 else:
                     time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[pairnames.index(arrangepair[0])]) # 100 coin star time adjustments
                     if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
-                    else: time += (i-2)*reentryTime(course)/60
+                    else: time += (i-2)*reentryTime(course)/30
                     if time < bestnum: 
                         bestnum = time
                         besttext = arrangement
             else:
                 if i < 2: time += 0
-                else: time += (i-1)*reentryTime(course)/60
+                else: time += (i-1)*reentryTime(course)/30
                 if time < bestnum:
                     bestnum = time
                     besttext = arrangement
             time = round(time, 2)
         Arr[course][i] = [bestnum, besttext]
-        if course == "JRB" and i<len(starnames): Arr[course][str(str(i)+"js")] = [bestjsnum, bestjstext] # i restriction prevents the "less stars being collected than it thinks" bug
-        if course == "SL" and i<len(starnames): Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext]
+        if course == "SL" and i<len(starnames): Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext] # i restriction prevents the "less stars being collected than it thinks" bug
         if course == "TTM" and i<len(starnames): Arr[course][str(str(i)+"uk")] = [bestuknum, bestuktext]
     print(Arr[course])
 
@@ -540,20 +481,21 @@ def getAllStarArrangements():
     for i in range(len(Stars)):
         getStarArrangements(list(Stars.keys())[i])
 
-def getStarCombinations():
-    bestnum = 99999
-    bestbitfsholpnum = 99999
-    bestearlydddnum = 99999
-    fail = 0
-    count = 0
-    upper = 1000000
-    file_name = "seventyabcexport.txt"
-
-    def export_results(etext):
+def export_results(etext, file_name):
         export = open(file_name, "a")
         export.writelines(etext)
         export.write("\n")
         export.close()
+
+starTimes = {}
+
+def getStarCombinations():
+    bestnum = 99999
+    bestbitfsholpnum = 99999
+    bestmipsresnum = 99999
+    bestearlydddnum = 99999
+    count = 0
+    upper = 500000
 
     for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
         total = 0
@@ -579,11 +521,8 @@ def getStarCombinations():
             total_text.append(total_data[i][1])
             total_values.append(total_data[i][0])
 
-        JS, UK, IG = False, False, False
+        UK, IG = False, False
         combin_abridged = list(combin)
-        if "js" in str(combin_abridged[4]): 
-            JS = True
-            combin_abridged[4]=str(combin_abridged[4]).removesuffix("js")
         if "uk" in str(combin_abridged[11]):
             UK = True
             combin_abridged[11]=str(combin_abridged[11]).removesuffix("uk")
@@ -595,35 +534,108 @@ def getStarCombinations():
 
         if total+40 == 70:
             if int(combin[7]) == 0 and IG == False:
-                fail += 1
+                fail = True
             else:
                 if sum(total_values) < bestnum:
                     bestnum = sum(total_values)
                     besttext = total_text
-                    export_results(["Best:", str(bestnum), str(besttext)])
-                if 29+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[2])+int(combin_abridged[3])+int(combin_abridged[4])+int(combin_abridged[5])+int(combin_abridged[6])+int(combin_abridged[7])>=50 and UK==True: # BitFS HOLP Route
-                    if sum(total_values) < bestbitfsholpnum:
-                        bestbitfsholpnum = sum(total_values)
-                        bestbitfsholptext = total_text
-                        export_results(["BitFS HOLP:", str(bestbitfsholpnum), str(bestbitfsholptext)])
-                if 16+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[4])+int(combin_abridged[5])<=30 and JS==True: # Early DDD Routes
+                    starTimes["Free"] = ["Unrestricted:", str(bestnum), str(besttext)]
+                    export_results(starTimes["Free"], "seventyabcexport.txt")
+                if 29+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[2])+int(combin_abridged[3])+int(combin_abridged[4])+int(combin_abridged[5])+int(combin_abridged[6])+int(combin_abridged[7])>=50: # MIPS Restricted Routes
+                    if UK == True: # (BitFS HOLP Routes)
+                        if sum(total_values) < bestbitfsholpnum:
+                            bestbitfsholpnum = sum(total_values)
+                            bestbitfsholptext = total_text
+                            starTimes["BitFS"] = ["BitFS HOLP:", str(bestbitfsholpnum), str(bestbitfsholptext)]
+                            export_results(starTimes["BitFS"], "seventyabcexport.txt")
+                    else: # (Non-BitFS HOLP Routes)
+                        if sum(total_values) < bestmipsresnum:
+                            bestmipsresnum = sum(total_values)
+                            bestmipsrestext = total_text
+                            starTimes["MIPS"] = ["MIPS Restr.", str(bestmipsresnum), str(bestmipsrestext)]
+                            export_results(starTimes["MIPS"], "seventyabcexport.txt")
+                if "jetstream" in total_text[4]:
+                    jetcheck = -1
+                    detour = (MovementTimes["3"]+MovementTimes["4"]+MovementTimes["5"]+MovementTimes["6"]+MovementTimes["7"]+MovementTimes["U"])-(MovementTimes["F"])
+                else:
+                    jetcheck = 0
+                    detour = 0
+                if 16+jetcheck+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[4])+int(combin_abridged[5])>=30: # Early DDD Routes
                     if sum(total_values) < bestearlydddnum:
-                        bestearlydddnum = sum(total_values)
+                        bestearlydddnum = sum(total_values) + detour/30
                         bestearlydddtext = total_text
-                        export_results(["Early DDD:", str(bestearlydddnum), str(bestearlydddtext)])
+                        starTimes["DDD"] = ["Early DDD:", str(bestearlydddnum), str(bestearlydddtext)]
+                        export_results(starTimes["DDD"], "seventyabcexport.txt")
         count = count + 1
         if count >= upper:
             print(count/1000000, "million")
-            upper += 1000000
+            upper += 500000
+
+def holpTime(course):
+    if course == "WDW": return HOLPTimes["WDW"][0] + HOLPTimes["BitS"][1] + HOLPTimes["BitFS"][1]
+    elif course == "BitS": return HOLPTimes["WDW"][1] + HOLPTimes["BitS"][0] + HOLPTimes["BitFS"][1]
+    elif course == "BitFS": return HOLPTimes["WDW"][1] + HOLPTimes["BitS"][1] + HOLPTimes["BitFS"][0]
+
+downlist = [
+    [
+        ["BitFS (MIPS restricted)", [0], [bestofallnum], "BitFS", "BitFS"],
+        ["WDW (MIPS restricted)", [0], [wdwresnum], "WDW", "MIPS"],
+        ["WDW (DDD early)", [4, 5, 6, 7, 8, 9], [min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
+            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
+            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
+            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
+            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
+            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum)], "WDW", "DDD"],
+        ["WDW (No DDD early)", [1, 2, 3], [twovisitwdwresnum, 
+            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum), 
+            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum)], "WDW", "Free"],
+        ["No Preset (MIPS restricted)", [0], [bestofallnum], "BitS", "MIPS"],
+        ["No Preset (DDD early)", [4, 5, 6, 7, 8, 9], [min(twovisitnum, twovisit2wdwnum),
+            min(twovisitnum, twovisit2wdwnum),
+            min(twovisitslresnum, twovisit2wdwslresnum),
+            min(twovisitslresnum, twovisit2wdwslresnum),
+            min(twovisitnum, twovisit2wdwnum),
+            min(twovisitnum, twovisit2wdwnum)], "BitS", "DDD"],
+        ["No Preset (No DDD early)", [2, 3], [min(twovisitnum, twovisit2wdwnum), 
+            min(twovisitslresnum, twovisit2wdwslresnum), 
+            min(twovisitnum, twovisit2wdwnum)], "BitS", "Free"]
+    ],
+    [
+        ["Original", ["A", "B", "D", "E", "K", "W", "X", "Y", "Z", "1"]],
+        ["Classic", ["0", "D", "E", "F", "G", "H", "I", "J", "K", "W", "X", "Y", "Z", "1"]],
+        ["Why", ["0", "C", "D", "F", "G", "H", "I", "J", "K", "W", "X", "1", "L"], ],
+        ["Late VC", ["0", "F", "G", "H", "I", "J", "K", "M", "O", "W", "X", "Y", "Z"]],
+        ["2 JRB A", ["0", "A", "D", "H", "K", "M", "Q", "R", "T", "U", "Z", "2"]],
+        ["2 JRB A1", ["0", "A", "D", "H", "M", "T", "U", "V", "W", "X", "Z", "2"]],
+        ["2 JRB B", ["0", "D", "G", "H", "K", "Q", "R", "Z", "1", "U", "2"]],
+        ["2 JRB B1", ["0", "D", "G", "H", "V", "W", "X", "Z", "1", "U", "2"]],
+        ["2 JRB C", ["0", "A", "B", "C", "D", "F", "K", "L", "Q", "R", "W", "1", "2"]],
+        ["2 JRB C1", ["0", "A", "B", "C", "D", "F", "L", "V", "W", "W", "X", "1", "2"]]
+    ]
+]
+downlist2 = {}
+
+def getDownstairsMovements():
+    for i in range(len(downlist[0])):
+        downlist2[downlist[0][i][0]] = {}
+        for j in range(len(downlist[0][i][1])):
+            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*60)
+            for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
+                sum += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
+            downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum/60
+        print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 
 if __name__ == "__main__":
-    getAllStarArrangements()
-else:
     getCombinationTotal()
     print("")
     getUpstairsMovements()
     print("")
+    getAllStarArrangements() # Must be done before getStarCombinations()
+    print("")
+    getStarCombinations() # Must be done before getDownstairsMovements()
+    print("")
     getDownstairsMovements()
-    print("")
-    getStarCombinations()
-    print("")
+    k = 0
+else:
+    k = 0
+    
