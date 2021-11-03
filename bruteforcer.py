@@ -292,7 +292,7 @@ JRB = {
     "eelplay": 43.80,
     "jrbreds": 74.46,
     "JRB100": 171.00,  # When paired with jetstream
-    "jetstream": 53.87+MovementTimes["8"],
+    "jetstream": 53.87+(MovementTimes["8"]/30),
 }
 
 # Big Boo's Haunt
@@ -427,7 +427,7 @@ def getStarArrangements(course):
         bestuknum = 99999 # Used for monkeycageless
         count = 0
         for arrangement in itertools.combinations(starnames, i):
-            arrangepair = list(match(sorted(pairnames), arrangement))
+            arrangepair = list(match(sorted(pairnames), arrangement)) # The list is sorted so that the best 100c pairing is taken 
             time = 0
             
             for j in range(i):
@@ -561,7 +561,7 @@ def getStarCombinations():
                     jetcheck = 0
                     detour = 0
                 if 16+jetcheck+int(combin_abridged[0])+int(combin_abridged[1])+int(combin_abridged[4])+int(combin_abridged[5])>=30: # Early DDD Routes
-                    if sum(total_values) < bestearlydddnum:
+                    if (sum(total_values) + detour/30) < bestearlydddnum:
                         bestearlydddnum = sum(total_values) + detour/30
                         bestearlydddtext = total_text
                         starTimes["DDD"] = ["Early DDD:", str(bestearlydddnum), str(bestearlydddtext)]
@@ -619,10 +619,10 @@ def getDownstairsMovements():
     for i in range(len(downlist[0])):
         downlist2[downlist[0][i][0]] = {}
         for j in range(len(downlist[0][i][1])):
-            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*60)
+            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30)
             for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
                 sum += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
-            downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum/60
+            downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum/30
         print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 
 if __name__ == "__main__":
