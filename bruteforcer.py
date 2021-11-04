@@ -300,7 +300,7 @@ BBH = {
     "ghosthunt": 54.73,
     "hauntedbooks": 31.53, # 74.00 without ghost hunt precollected
     "bbhreds": 95.83,
-    "BBH100": 146.00, # When paired with bbhreds. 160.00 without ghost hunt precollected. current is 173.05
+    "BBH100": 154.00, # When paired with bbhreds. 160.00 without ghost hunt precollected. current is 173.05
 }
 
 # Dire Dire Docks
@@ -429,14 +429,14 @@ def getStarArrangements(course):
         for arrangement in itertools.combinations(starnames, i):
             arrangepair = list(match(sorted(pairnames), arrangement)) # The list is sorted so that the best 100c pairing is taken 
             time = 0
-            
+
             for j in range(i):
                 time += starvalues[starnames.index(arrangement[j])]
             
             if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
                 if course in list(Detours.keys()):
                     time += -1*Detours[course]
-            
+
             if course == "BoB":
                 if "koopathequick" not in arrangement and ("island" in arrangement or "bobreds" in arrangement or "chainchomp" in arrangement): time += 99999
             if course == "BBH":
@@ -456,10 +456,10 @@ def getStarArrangements(course):
                         bestuktext = arrangement
 
             if str(course+"100") in arrangement: # All 100 coin stuff goes through here no matter what
-                if match(pairnames, arrangement)[0] == "Empty":
+                if arrangepair[0] == "Empty":
                     time += 99999
                 else:
-                    time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[pairnames.index(arrangepair[0])]) # 100 coin star time adjustments
+                    time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[starnames.index(arrangepair[0])]) # 100 coin star time adjustments
                     if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
                     else: time += (i-2)*reentryTime(course)/30
                     if time < bestnum: 
