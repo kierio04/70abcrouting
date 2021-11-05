@@ -242,7 +242,6 @@ MovementTimes = {
     "Y": 138, # MIPS room door to LLL
     "Z": 552, # SSL to MIPS
     "1": 319, # HMC to VCutM
-    "2": 243, # 2 JRB Detour
     "3": 73.5, # pause exit to JRB (="V")
     "4": 51, # enter JRB door
     "5": 224, # jrb door to jrb
@@ -272,7 +271,7 @@ WF = {
 # Shifting Sand Land
 
 SSL = {
-    "standtall": 66.83,
+    "standtall": 66.83, # Current is 66.83
     "sslreds": 75.47,
 }
 
@@ -432,10 +431,13 @@ def getStarArrangements(course):
 
             for j in range(i):
                 time += starvalues[starnames.index(arrangement[j])]
-            
+
             if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
                 if course in list(Detours.keys()):
                     time += -1*Detours[course]
+            else:
+                if course in ["BoB", "WF", "SSL", "HMC", "JRB", "BBH", "DDD", "WDW", "TTM", "SL"]: # Deals with the ignored stars courses' initial reentry
+                    time += reentryTime(course)/30
 
             if course == "BoB":
                 if "koopathequick" not in arrangement and ("island" in arrangement or "bobreds" in arrangement or "chainchomp" in arrangement): time += 99999
@@ -556,7 +558,7 @@ def getStarCombinations():
                             export_results(starTimes["MIPS"], "seventyabcexport.txt")
                 if "jetstream" in total_text[4]:
                     jetcheck = -1
-                    detour = (MovementTimes["3"]+MovementTimes["4"]+MovementTimes["5"]+MovementTimes["6"]+MovementTimes["7"]+MovementTimes["U"])-(MovementTimes["F"])
+                    detour = (MovementTimes["4"]+MovementTimes["5"]+MovementTimes["6"]+MovementTimes["7"]-reentryTime("JRB"))+(MovementTimes["3"]+MovementTimes["U"]-MovementTimes["F"])
                 else:
                     jetcheck = 0
                     detour = 0
@@ -580,62 +582,71 @@ downlist = [
     [
         ["BitFS (MIPS restricted)", [0], [bestofallnum], "BitFS", "BitFS"],
         ["WDW (MIPS restricted)", [0], [wdwresnum], "WDW", "MIPS"],
-        ["WDW (DDD early)", [4, 5, 6, 7, 8, 9], [min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
+        ["WDW (DDD early)", [4, 5, 6, 7], [min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
             min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
             min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
-            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum),
-            min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum)], "WDW", "DDD"],
+            min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum),], "WDW", "DDD"],
         ["WDW (No DDD early)", [1, 2, 3], [twovisitwdwresnum, 
             min(twovisitwdwresnum, twovisit2wdwnum, twovisit3wdwnum), 
             min(twovisitwdwslresnum, twovisit2wdwslresnum, twovisit3wdwslresnum)], "WDW", "Free"],
         ["No Preset (MIPS restricted)", [0], [bestofallnum], "BitS", "MIPS"],
-        ["No Preset (DDD early)", [4, 5, 6, 7, 8, 9], [min(twovisitnum, twovisit2wdwnum),
+        ["No Preset (DDD early)", [4, 5, 6, 7], [min(twovisitnum, twovisit2wdwnum),
+
             min(twovisitnum, twovisit2wdwnum),
             min(twovisitslresnum, twovisit2wdwslresnum),
-            min(twovisitslresnum, twovisit2wdwslresnum),
-            min(twovisitnum, twovisit2wdwnum),
-            min(twovisitnum, twovisit2wdwnum)], "BitS", "DDD"],
+            min(twovisitslresnum, twovisit2wdwslresnum)], "BitS", "DDD"],
         ["No Preset (No DDD early)", [2, 3], [min(twovisitnum, twovisit2wdwnum), 
             min(twovisitslresnum, twovisit2wdwslresnum), 
             min(twovisitnum, twovisit2wdwnum)], "BitS", "Free"]
     ],
     [
-        ["Original", ["A", "B", "D", "E", "K", "W", "X", "Y", "Z", "1"]],
-        ["Classic", ["0", "D", "E", "F", "G", "H", "I", "J", "K", "W", "X", "Y", "Z", "1"]],
-        ["Why", ["0", "C", "D", "F", "G", "H", "I", "J", "K", "W", "X", "1", "L"], ],
-        ["Late VC", ["0", "F", "G", "H", "I", "J", "K", "M", "O", "W", "X", "Y", "Z"]],
-        ["2 JRB A", ["0", "A", "D", "H", "K", "M", "Q", "R", "T", "U", "Z", "2"]],
-        ["2 JRB A1", ["0", "A", "D", "H", "M", "T", "U", "V", "W", "X", "Z", "2"]],
-        ["2 JRB B", ["0", "D", "G", "H", "K", "Q", "R", "Z", "1", "U", "2"]],
-        ["2 JRB B1", ["0", "D", "G", "H", "V", "W", "X", "Z", "1", "U", "2"]],
-        ["2 JRB C", ["0", "A", "B", "C", "D", "F", "K", "L", "Q", "R", "W", "1", "2"]],
-        ["2 JRB C1", ["0", "A", "B", "C", "D", "F", "L", "V", "W", "W", "X", "1", "2"]]
+        ["Original", ["A", "B", "D", "E", "K", "W", "X", "Y", "Z", "1", "V"]],
+        ["Classic", ["0", "D", "E", "F", "G", "H", "I", "J", "K", "W", "X", "Y", "Z", "1", "V"]],
+        ["Why", ["0", "C", "D", "F", "G", "H", "I", "J", "K", "W", "X", "1", "L", "V"]],
+        ["Late VC", ["0", "F", "G", "H", "I", "J", "K", "M", "O", "W", "X", "Y", "Z", "V"]],
+        ["Early DDD A", ["0", "A", "D", "H", "K", "M", "Q", "R", "T", "Z", "F"]],
+        ["Early DDD A1", ["0", "A", "D", "H", "M", "T", "V", "W", "X", "Z", "F"]],
+        ["Early DDD B", ["0", "D", "G", "H", "K", "Q", "R", "Z", "1", "F"]],
+        ["Early DDD B1", ["0", "D", "G", "H", "V", "W", "X", "Z", "1", "F"]]
     ]
 ]
-downlist2 = {}
 
 def getDownstairsMovements():
+    downlist2 = {}
     for i in range(len(downlist[0])):
         downlist2[downlist[0][i][0]] = {}
         for j in range(len(downlist[0][i][1])):
-            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30)
+            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3])
             for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
                 sum += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
             downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum/30
         print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 
+def getTotalRouteTimes():
+    downlist3 = {}
+    for i in range(len(downlist[0])):
+        downlist3[downlist[0][i][0]] = {}
+        for j in range(len(downlist[0][i][1])):
+            sum = min(downlist[0][i][2][j]) + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30)
+            for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
+                sum += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
+            downlist3[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = sum/30
+        print(downlist[0][i][0], downlist3[downlist[0][i][0]])
+
 if __name__ == "__main__":
+    k = 0
     getCombinationTotal()
     print("")
     getUpstairsMovements()
     print("")
     getAllStarArrangements() # Must be done before getStarCombinations()
     print("")
-    getStarCombinations() # Must be done before getDownstairsMovements()
+    getStarCombinations() # Must be done before getDownstairsMovements() and getTotalRouteTimes()
     print("")
-    getDownstairsMovements()
-    k = 0
+    getDownstairsMovements() # This is optional
+    print("")
+    getTotalRouteTimes()
 else:
+    getStarArrangements("DDD")
     k = 0
     
