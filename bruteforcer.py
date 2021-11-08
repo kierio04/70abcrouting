@@ -227,38 +227,86 @@ text_list = [wdwlesstext, bestofalltext, wdwrestext, twovisittext, twovisitwdwre
 for i in range(len(text_list)):
     text_list[i] = text_list[i][num_save[i]]
 
+# ORIGINAL (FULL): wf->bitdw->pss->wc->[mid]->[down]->lll->ssl->[mips]->hmc->vcutm->[pe]->jrb->[mid]->bbh->[down]->ddd->bitfs->mips->[lll]->[pe]->up
+
+# ORIGINAL: wf->bitdw->pss->wc->lll->ssl->hmc->vcutm->jrb->bbh->ddd->bitfs->mips->up
+# CLASSIC: wf->bitdw->pss->wc->lll->ssl->hmc->vcutm->jrb->bbh->ddd->bitfs->up->mips->up	
+# WHY: wf->bitdw->pss->wc->hmc->vcutm->jrb->bbh->ddd->bitfs->up->mips->lll->ssl->up	
+# LATE VC: wf->bitdw->pss->wc-->lll->ssl>hmc->jrb->bbh->ddd->bitfs->up->mips->vcutm->up
+# LATE HMC: wf->bitdw->pss->wc-->lll->ssl>mips->vcutm->bbh->ddd->bitfs->up->hmc->jrb->up
+# EARLY DDD EARLY VC: wf->jrb->bitdw->pss->wc->bbh->ddd->bitfs->vcutm->up->mips->lll->ssl->hmc->up
+# EARLY DDD EARLY VC ALT: wf->bitdw->pss->wc->jrb->bbh->ddd->bitfs->vcutm->up->mips->lll->ssl->hmc->up
+# EARLY DDD LATE VC: wf->jrb->bitdw->pss->wc->bbh->ddd->bitfs->up->mips->lll->ssl->hmc->vcutm->up
+# EARLY DDD LATE VC ALT: wf->bitdw->pss->wc->jrb->bbh->ddd->bitfs->up->mips->lll->ssl->hmc->vcutm->up
+
+# a = instead of bitfs->[down], bitfs->up and up->[down]
+# b = instead of [down]->lll + ssl->[mips]->hmc + [lll]->[pe], [down]->[mips]->hmc + ssl->[pe]
+# c = instead of hmc->vcutm + [down]->mips->[lll]->[pe], hmc->[pe] + [down]->mips->vcutm
+# d = instead of ssl->[mips]->hmc + jrb->[mid] + [down]->mips->vcutm + [pe]->up, ssl->[mips]->vcutm + [pe]->[mid] + [down]->[mips]->hmc + jrb->up
+# x = instead of wc->[mid]->[down]->lll + [pe]->jrb + [lll]->[pe], wc->jrb
+# y = instead of bitfs->[pe] + hmc->vcutm, bitfs->vcutm + hmc->[pe]
+
+# JETSTREAM DETOUR ROUTE - SORT IN "GET STAR ARRANGEMENTS" SECTION
+# j = instead of [pe]->up, [pe]->jrb + jrb->up (-jrbreentry)
+
+# ALTERNATE LOBBY REROUTE - SORT OUT IN "GET FINAL ROUTE DATA" SECTION
+# z = instead of wf->bitdw + wc->jrb->[mid], wf->jrb->bitdw + wc->[mid]
+
+# CHECK #SEVENTY_ABC FOR EARLY DDD LATE VC TEXT/NUM VARIABLES PLAN
+
+# a = (Pb/Ea+Eb/I/J)-(A/B)
+# b = (Ma+Pc)-(Dd+Md+Pax)
+# c = (Pd+Mb)-(Dc/Db+Mc)
+# d = (Me+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
+# x = (Ed)-(Ec/I/J/Dd+Ee+Pax)
+# y = (A/Da+Pd)-(Pb+Dc/Db)
+# j = (Ee/Ja/Jb+Jc/Jd/Jf)-(Ea+Jh)
+# z = (Q/R+Ec)-(X+Ed/Jg)
+
+# ORIGINAL = 0
+
 MovementTimes = {
+    "Ma": 114+450, # MIPS room door to MIPS to HMC door (Segmented)
+    "Mb": 114+469, # MIPS room door to MIPS to pillar door (Segmented)
+    "Mc": 114+466, # MIPS room door to MIPS to LLL
+    "Md": 316+450, # SSL to MIPS to HMC door
+    "Me": 316+469, # SSL to MIPS to pillar door (Segmented)
+    "Mf": 115+469, # HMC to MIPS to pillar door
+
+    "Pa": pauseexitTime("LLL"), # LLL reentry and pause exit - "lll->[pe]" (used to be E)
+    "Pax": pauseexitTime("LLL")-ReentrySplits["LLL"], # LLL entry and pause exit - "[lll]->[pe]"
+    "Pb": pauseexitTime("BitFS"), # BitFS reentry and pause exit (used to be G)
+    "Pc": pauseexitTime("SSL"), # SSL reentry and pause exit (used to be L)
+    "Pd": pauseexitTime("HMC"), # HMC reentry and pause exit (used to be M)
+
+    "Da": 79+765, # 30 star door to VCutM door (used to be T)
+    "Db": 727, # pillar door to VCutM door (used to be part of 1)
+    "Dc": 242, # HMC to pillar door (used to be part of 1)
+    "Dd": 138, # MIPS room door to LLL (used to be Y)
+
+    "Ea": 153.5, # pause exit to up (used to be F)
+    "Eb": 111, # pause exit to door to downstairs (used to be H)
+    "Ec": 111, # TotWC exit to door to downstairs (used to be K)
+    "Ed": 73.5, # TotWC exit to JRB (used to be V)
+    "Ee": 73.5, # pause exit to JRB (used to be 3)
+
+    "Ja": 51, # enter JRB door (used to be 4)
+    "Jb": 224, # jrb door to jrb (used to be 5)
+    "Jc": 441, # jrb to jrb door (used to be 6)
+    "Jd": 61, # exit JRB door (used to be 7)
+    "Je": 80, # cotmc timestop (used to be 8)
+    "Jf": 176, # JRB to up (used to be U)
+    "Jg": 64, # JRB to door to downstairs (used to be W)
+    "Jh": reentryTime("JRB"), # JRB reentry
+
     "0": 144, # up to upstairs (staircase)
     "A": 135, # BitFS to 30 star door
     "B": 178, # 30 star door to MIPS room door
-    "C": 632, # MIPS room door to MIPS
-    "D": 139.5, # MIPS to LLL
-    "E": pauseexitTime("LLL"), # LLL reentry and pause exit
-    "F": 153.5, # pause exit to up
-    "G": pauseexitTime("BitFS"), # BitFS reentry and pause exit
-    "H": 111, # pause exit to door to downstairs (="K")
     "I": 106.5, # door to downstairs to down key
     "J": 159, # down key to MIPS room door
-    "K": 111, # TotWC exit to door to downstairs (="H")
-    "L": pauseexitTime("SSL"), # SSL reentry and pause exit
-    "M": pauseexitTime("HMC"), # HMC reentry and pause exit
-    "O": 133, # MIPS to VCutM
     "Q": 131, # WF to JRB
     "R": 163, # JRB to BitDW
-    "T": 192, # 30 star door to VCutM
-    "U": 176, # JRB to up
-    "V": 73.5, # TotWC exit to JRB (="3")
-    "W": 64, # JRB to door to downstairs
     "X": 110, # WF to BitDW
-    "Y": 138, # MIPS room door to LLL
-    "Z": 552, # SSL to MIPS
-    "1": 319, # HMC to VCutM
-    "3": 73.5, # pause exit to JRB (="V")
-    "4": 51, # enter JRB door
-    "5": 224, # jrb door to jrb
-    "6": 441, # jrb to jrb door
-    "7": 61, # exit JRB door
-    "8": 80, # cotmc timestop
 }
 
 # Bob-omb Battlefield
@@ -292,7 +340,7 @@ HMC = {
     "metalcap": 56.23,
     "toxicmaze": 72.23,
     "HMC100": 173.00, # When paired with toxicmaze
-    "metalhead": 49.57,  # Current is 70.10
+    "metalhead": 48.57,  # Current is 70.10
 }
 
 # Jolly Roger Bay
@@ -302,7 +350,7 @@ JRB = {
     "eelplay": 43.80,
     "jrbreds": 74.46,
     "JRB100": 171.00,  # When paired with jetstream
-    "jetstream": 53.87+(MovementTimes["8"]/30),
+    "jetstream": 53.87+(MovementTimes["Je"]/30),
 }
 
 # Big Boo's Haunt
@@ -368,6 +416,8 @@ HOLPTimes = { # Relative timeloss with setup, relative timeloss without setup
 # removed bob and wf from stars
 
 Stars = {
+    "BoB": BoB,
+    "WF": WF,
     "SSL": SSL,
     "HMC": HMC,
     "JRB": JRB,
@@ -503,6 +553,35 @@ def export_results(etext, file_name):
 
 starTimes = {}
 
+# GET DOWNSTAIRS ROUTE/DETOUR COMPARISONS
+
+m = MovementTimes
+# a = (Pb/Ea+Eb/I/J)-(A/B)
+# b = (Ma+Pc)-(Dd+Md+Pax)
+# c = (Pd+Mb)-(Dc/Db+Mc)
+# d = (Me+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
+# x = (Ed)-(Ec/I/J/Dd+Ee+Pax)
+# y = (A/Da+Pd)-(Pb+Dc/Db)
+# j = (Ee/Ja/Jb+Jc/Jd/Jf)-(Ea+Jh)
+# z = (Q/R+Ec)-(X+Ed/Jg)
+
+# JETSTREAM DETOUR ROUTE - SORT IN "GET STAR ARRANGEMENTS" SECTION
+# ALTERNATE LOBBY REROUTE - SORT OUT IN "GET FINAL ROUTE DATA" SECTION
+
+A = float((m["Pb"]+m["Ea"]+m["Eb"]+m["I"]+m["J"])-(m["A"]+m["B"])) # CLASSIC VS ORIGINAL
+B = float((m["Ma"]+m["Pc"])-(m["Dd"]+m["Md"]+m["Pax"])) # WHY VS CLASSIC
+C = float((m["Pd"]+m["Mb"])-(m["Dc"]+m["Db"]+m["Mc"])) # LATE VC VS CLASSIC
+D = float((m["Me"]+m["Eb"]+m["Ma"]+m["Jf"])-(m["Md"]+m["Jg"]+m["Mb"]+m["Ea"])) # LATE HMC VS LATE VC
+X = float((m["Ed"])-(m["Ec"]+m["I"]+m["J"]+m["Dd"]+m["Ee"]+m["Pax"])) # EARLY DDD BASE
+Y = float((m["A"]+m["Da"]+m["Pd"])-(m["Pb"]+m["Dc"]+m["Db"])) # EARLY VC ON EARLY DDD
+J = float((m["Ee"]+m["Ja"]+m["Jb"]+m["Jc"]+m["Jd"]+m["Jf"])-(m["Ea"]+m["Jh"])) # JETSTREAM DETOUR ON EARLY DDD
+Z = float((m["Q"]+m["R"]+m["Ec"])-(m["X"]+m["Ed"]+m["Jg"])) # ALTERNATE LOBBY REROUTE ON EARLY DDD
+
+if Z<=0: alt = True
+else: 
+    alt = False
+    Z = 0
+
 # GET STAR COMBINATIONS
 
 bestnum = 99999
@@ -563,7 +642,7 @@ for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], A
                         export_results(starTimes["MIPS"], "seventyabcexport.txt")
             if "jetstream" in total_text[4]:
                 jetcheck = -1
-                detour = (MovementTimes["4"]+MovementTimes["5"]+MovementTimes["6"]+MovementTimes["7"]-reentryTime("JRB"))+(MovementTimes["3"]+MovementTimes["U"]-MovementTimes["F"])
+                detour = J
             else:
                 jetcheck = 0
                 detour = 0
@@ -590,25 +669,26 @@ def holpTime(course):
 
 # GET DOWNSTAIRS MOVEMENTS
 
+# [wdwlessnum, bestofallnum, wdwresnum, twovisitnum, twovisitwdwresnum, twovisitwdwslresnum, twovisitslresnum, twovisit2wdwnum, twovisit2wdwslresnum, twovisit3wdwnum, twovisit3wdwslresnum]
+
 downlist = [
     [
         ["BitFS (MIPS restricted)", [0], [num_list[1]], "BitFS", "BitFS"],
         ["WDW (MIPS restricted)", [0], [num_list[2]], "WDW", "MIPS"],
-        ["WDW (DDD early)", [4, 5, 6, 7], [min(num_list[4], num_list[7], num_list[9]), min(num_list[4], num_list[7], num_list[9]), min(num_list[5], num_list[8], num_list[10]), min(num_list[5], num_list[8], num_list[10])], "WDW", "DDD"],
-        ["WDW (No DDD early)", [1, 2, 3], [min(num_list[4], num_list[7], num_list[9]), min(num_list[4], num_list[7], num_list[9]), min(num_list[5], num_list[8], num_list[10])], "WDW", "Free"],
+        ["WDW (DDD early)", [5, 6], [min(num_list[4], num_list[7], num_list[9]), min(num_list[5], num_list[8], num_list[10])], "WDW", "DDD"],
+        ["WDW (No DDD early)", [1, 2, 3, 4], [min(num_list[4], num_list[7], num_list[9]), min(num_list[4], num_list[7], num_list[9]), min(num_list[5], num_list[8], num_list[10]), min(num_list[4], num_list[7], num_list[9])], "WDW", "Free"],
         ["No Preset (MIPS restricted)", [0], [num_list[1]], "BitS", "MIPS"],
-        ["No Preset (DDD early)", [4, 5, 6, 7], [min(num_list[3], num_list[7]), min(num_list[3], num_list[7]), min(num_list[6], num_list[8]), min(num_list[6], num_list[8])], "BitS", "DDD"],
-        ["No Preset (No DDD early)", [2, 3], [min(num_list[3], num_list[7]), min(num_list[6], num_list[8]), min(num_list[3], num_list[7])], "BitS", "Free"]
+        ["No Preset (DDD early)", [5, 6], [min(num_list[3], num_list[7], num_list[9]), min(num_list[6], num_list[8], num_list[10])], "BitS", "DDD"],
+        ["No Preset (No DDD early)", [2, 3, 4], [min(num_list[3], num_list[7], num_list[9]), min(num_list[6], num_list[8]), min(num_list[3], num_list[7], num_list[9])], "BitS", "Free"]
     ],
     [
-        ["Original", ["A", "B", "D", "E", "K", "W", "X", "Y", "Z", "1", "V"], ["WF", "BitDW", "PSS", "WC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS", "MIPS"]],
-        ["Classic", ["0", "D", "E", "F", "G", "H", "I", "J", "K", "W", "X", "Y", "Z", "1", "V"], ["WF", "BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS"]],
-        ["Why", ["0", "C", "D", "F", "G", "H", "I", "J", "K", "W", "X", "1", "L", "V"], ["WF", "BitDW", "PSS", "TotWC", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL"]],
-        ["Late VC", ["0", "F", "G", "H", "I", "J", "K", "M", "O", "W", "X", "Y", "Z", "V"], ["WF", "BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "VCutM"]],
-        ["Early DDD A", ["0", "A", "D", "H", "K", "M", "Q", "R", "T", "Z", "F"], ["WF", "JRB", "BitDW", "PSS", "TotWC", "BBH", "DDD", "BitFS", "VCutM"], ["MIPS", "LLL", "SSL", "HMC"]],
-        ["Early DDD A1", ["0", "A", "D", "H", "M", "T", "V", "W", "X", "Z", "F"], ["WF", "BitDW", "PSS", "TotWC", "JRB", "BBH", "DDD", "BitFS", "VCutM"], ["MIPS", "LLL", "SSL", "HMC"]],
-        ["Early DDD B", ["0", "D", "G", "H", "K", "Q", "R", "Z", "1", "F"], ["WF", "JRB", "BitDW", "PSS", "TotWC", "BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL", "HMC", "VCutM"]],
-        ["Early DDD B1", ["0", "D", "G", "H", "V", "W", "X", "Z", "1", "F"], ["WF", "BitDW", "PSS", "TotWC", "JRB", "BBH", "DDD", "BitFS", "VCutM"], ["MIPS", "LLL", "SSL", "HMC", "VCutM"]]
+        ["Original", 0, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS", "MIPS"]],
+        ["Classic", A, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS"]],
+        ["Why", A+B, ["BitDW", "PSS", "TotWC", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL"]],
+        ["Late VC", A+C, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "VCutM"]],
+        ["Late HMC", A+C+D, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "MIPS", "VCutM", "BBH", "DDD", "BitFS"], ["HMC", "JRB"]],
+        ["Early DDD Early VC", A+X+Y+Z, ["BBH", "DDD", "BitFS", "VCutM"], ["MIPS", "LLL", "SSL", "HMC"]],
+        ["Early DDD Late VC", A+X+Z, ["BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL", "HMC", "VCutM"]]
     ]
 ]
 
@@ -616,10 +696,7 @@ downlist2 = {}
 for i in range(len(downlist[0])):
     downlist2[downlist[0][i][0]] = {}
     for j in range(len(downlist[0][i][1])):
-        summed = downlist[0][i][2][j] + holpTime(downlist[0][i][3])
-        for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
-            summed += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]]
-        downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = summed/30
+        downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1])/30 # Upstairs + HOLP + Castle
     print(downlist[0][i][0], downlist2[downlist[0][i][0]])
 print("")
 
@@ -632,12 +709,13 @@ for i in range(len(downlist[0])):
     downlist3[downlist[0][i][0]] = {}
     downlist4[downlist[0][i][0]] = {}
     for j in range(len(downlist[0][i][1])):
-        summed = downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30) # Upstairs + HOLP + Stars
-        for k in range(len(downlist[1][downlist[0][i][1][j]][1])):
-            summed += MovementTimes[downlist[1][downlist[0][i][1][j]][1][k]] # Castle
+        summed = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30) + downlist[1][downlist[0][i][1][j]][1])/30
+        downlist3[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = summed # Upstairs + HOLP + Stars + Castle
+        downlist4[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = ["BoB", "CCM", "WF"]
 
-        downlist3[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = summed/30
-        downlist4[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = ["BoB", "CCM"]
+        if downlist[1][downlist[0][i][1][j]][0] in ["Early DDD Early VC", "Early DDD Late VC"]: # Early JRB for Early DDD Routes
+            if alt == True: downlist4[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]].extend(["JRB", "BitDW", "PSS", "TotWC"])
+            elif alt == False: downlist4[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]].extend(["BitDW", "PSS", "TotWC", "JRB"])
 
         for k in range(len(downlist[1][downlist[0][i][1][j]][2])):
             downlist4[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]].append(downlist[1][downlist[0][i][1][j]][2][k]) # Downstairs 1
