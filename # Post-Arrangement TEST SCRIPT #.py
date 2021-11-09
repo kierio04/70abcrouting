@@ -1,9 +1,6 @@
 import itertools
 from typing import OrderedDict
 
-starfile = "seventyabcexport.txt"
-endfile = "finalresultsexport.txt"
-
 ReentryStats = {
     "Out": 300.5, # Star dance to first movement
     "Enter": 74, # Disappeared to first full white
@@ -119,24 +116,8 @@ PaintingToPainting = {
 def upstairs(a,b):
     return PaintingToPainting[a][b]
 
-def ListToString(list):
-    for i in range(len(list)):
-        list[i] = str(list[i])
-
-def export_results(etext, file_name):
-        export = open(file_name, "a")
-        export.writelines(etext)
-        export.write("\n")
-        export.close()
-
-def print_and_export(elist, file_name):
-    ListToString(elist)
-    for i in range(len(elist)):
-        print(elist[i])
-    export_results(elist, file_name)
-
 def upstairs_result(text, textlist, numlist):
-    print_and_export([text, min(numlist),textlist[numlist.index(min(list(numlist)))]], endfile)
+    print(text, min(numlist),textlist[numlist.index(min(list(numlist)))])
 
 uplist = ["Down", "WDW1", "WDW2", "WDW3", "SL", "TTM", "T2"] # 1 and 3 WDW
 uplist2 = ["Down", "SL", "TTM", "T2"] # 0 WDW
@@ -418,7 +399,8 @@ for i in range(len(downlist[0])):
     downlist2[downlist[0][i][0]] = {}
     for j in range(len(downlist[0][i][1])):
         downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1])/30 # Upstairs + HOLP + Castle
-    print_and_export([downlist[0][i][0], downlist2[downlist[0][i][0]]], endfile)
+    print(downlist[0][i][0], downlist2[downlist[0][i][0]])
+print("")
 
 # Bob-omb Battlefield
 
@@ -536,277 +518,9 @@ Stars = {
     "SL": SL,
 }
 
-# GET COMBINATION TOTAL
-
-totals = 1
-for i in OrderedDict(Stars):
-    tot = (len(Stars[i])+1)
-    if i == "TTM" or i == "SL": tot = tot + (len(Stars[i]))
-    totals = totals * tot
-print(totals)
-
-# Alternate 100 Coin Pairing Times
-
-Pairs = {
-    "BoB": {"bobreds": 0.00},
-    "WF": {"tower": 0.00, "wfreds": -11.08},
-    "SSL": {},
-    "HMC": {"toxicmaze": 0.00},
-    "JRB": {"jrbreds": 14.00, "jetstream": 0.00},
-    "BBH": {"bbhreds": 0.00},
-    "DDD": {},
-    "VCutM": {},
-    "BitFS": {},
-    "WDW": {"secrets": 0.00},
-    "THI": {},
-    "TTM": {"ttmreds": 0.00},
-    "SL": {"slreds": 0.00}
+starTimes = {
+    "BitFS": ["BitFS HOLP:", 1958.11, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), ('standtall',), ('metalcap', 'toxicmaze', 'metalhead'), ('sunkenship', 'eelplay', 'jetstream'), ('ghosthunt', 'hauntedbooks', 'bbhreds', 'BBH100'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'secrets', 'WDW100'), (), ('ttmreds',), ('slreds', 'intoigloo', 'SL100', 'bighead')]],
+    "MIPS": ["MIPS Restr.:", 1957.39, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), ('standtall',), ('metalcap', 'toxicmaze', 'metalhead'), ('sunkenship', 'eelplay', 'jetstream'), ('ghosthunt', 'hauntedbooks', 'bbhreds', 'BBH100'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'secrets', 'WDW100'), (), ('ttmreds', 'TTM100'), ('slreds', 'intoigloo', 'SL100')]],
+    "DDD": ["Early DDD:", 1943.37, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), (), ('metalcap', 'metalhead'), ('sunkenship', 'eelplay'), ('ghosthunt', 'hauntedbooks', 'bbhreds', 'BBH100'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'quickrace', 'secrets', 'WDW100'), (), ('monkeycage', 'ttmreds', 'TTM100'), ('slreds', 'intoigloo', 'SL100', 'bighead')]],
+    "Free": ["Unrestricted:", 1926.15, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), ('standtall',), ('metalcap', 'metalhead'), ('sunkenship', 'eelplay', 'jetstream'), ('ghosthunt', 'hauntedbooks'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'quickrace', 'secrets', 'WDW100'), (), ('monkeycage', 'ttmreds', 'TTM100'), ('slreds', 'intoigloo', 'SL100', 'bighead')]]
 }
-
-Detours = { # The following are the courses that have no hard confirmed stars
-    "BitFS": 0.00,
-    "BBH": 31.00,
-    "VCutM": (1233+ReentryStats["Out"]+pauseexitTime("VCutM")-pauseexitTime("HMC"))/30, # hmctovcutm+vcutmtojrb-hmctojrb
-    "THI": 11.00+19.50-8.00 # rough estimates for wdwtothi+thitottm-wdwtottm
-}
-
-Arr = {} # Shorthand for "Star Arrangements"
-
-def match(list1, list2):
-    return_list = ["Empty"]
-    for x in range(len(list1)):
-        for y in range(0, len(list2)):
-            if list1[x]==list2[y]:
-                return_list.append(str(list1[x]))
-    if len(return_list)>1: return_list.remove("Empty")
-    return return_list
-
-# GET STAR ARRANGEMENTS
-
-for i in range(len(Stars)):
-    course = list(Stars.keys())[i]
-    Arr[course] = {}
-    starnames = list(Stars[course].keys())
-    starvalues = list(Stars[course].values())
-    pairnames = list(Pairs[course].keys())
-    pairvalues = list(Pairs[course].values())
-    for i in range(0, len(starnames)+1):
-        bestnum = 99999
-        bestignum = 99999 # Used for intoiglooless
-        bestuknum = 99999 # Used for monkeycageless
-        count = 0
-        for arrangement in itertools.combinations(starnames, i):
-            arrangepair = list(match(sorted(pairnames), arrangement)) # The list is sorted so that the best 100c pairing is taken 
-            time = 0
-
-            for j in range(i):
-                time += starvalues[starnames.index(arrangement[j])]
-
-            if i == 0: # Deals with course detours, and if a course we don't want to be skipped is skipped, arbitrary time is added
-                if course in list(Detours.keys()):
-                    time += -1*Detours[course]
-            else:
-                if course in ["BoB", "WF", "SSL", "HMC", "JRB", "BBH", "DDD", "WDW", "TTM", "SL"]: # Deals with the ignored stars courses' initial reentry
-                    time += reentryTime(course)/30
-
-            if course == "BoB":
-                if "koopathequick" not in arrangement and ("island" in arrangement or "bobreds" in arrangement or "chainchomp" in arrangement): time += 99999
-                if "chaincomp" in arrangement: time += (reentryTime("BoB (DSG)")-reentryTime("BoB"))
-            if course == "BBH":
-                if "ghosthunt" not in arrangement:
-                    if "hauntedbooks" in arrangement: time += 33
-                    if "bbhreds" in arrangement: time += 14
-            if course == "JRB":
-                if "sunkenship" not in arrangement and ("eelplay" in arrangement or "jetstream" in arrangement): time += 99999 # Plunder is required to unlock the other two
-
-            if course == "SL" and "intoigloo" not in arrangement:
-                    if time < bestignum:  # Tracking intoiglooless routes
-                        bestignum = time
-                        bestigtext = arrangement
-            elif course == "TTM" and "monkeycage" not in arrangement:
-                    if time < bestuknum:  # Tracking ukikistarless routes
-                        bestuknum = time
-                        bestuktext = arrangement
-
-            if str(course+"100") in arrangement: # All 100 coin stuff goes through here no matter what
-                if arrangepair[0] == "Empty":
-                    time += 99999
-                else:
-                    time += (pairvalues[pairnames.index(arrangepair[0])] - starvalues[starnames.index(arrangepair[0])]) # 100 coin star time adjustments
-                    if i < 2: time += 0 # If 1 or 0 stars collected, no reentries
-                    else: time += (i-2)*reentryTime(course)/30
-                    if time < bestnum: 
-                        bestnum = time
-                        besttext = arrangement
-            else:
-                if i < 2: time += 0
-                else: time += (i-1)*reentryTime(course)/30
-                if time < bestnum:
-                    bestnum = time
-                    besttext = arrangement
-            time = round(time, 2)
-        Arr[course][i] = [bestnum, besttext]
-        if course == "SL" and i<len(starnames): Arr[course][str(str(i)+"ig")] = [bestignum, bestigtext] # i restriction prevents the "less stars being collected than it thinks" bug
-        if course == "TTM" and i<len(starnames): Arr[course][str(str(i)+"uk")] = [bestuknum, bestuktext]
-    print(Arr[course])
-
-starTimes = {}
-
-# GET STAR COMBINATIONS
-
-bestnum = 99999
-bestbitfsholpnum = 99999
-bestmipsresnum = 99999
-bestearlydddnum = 99999
-count = 0
-upper = 500000
-
-for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
-    total = 0
-
-    total_data = []
-    for i in range(len(Stars)):
-        total_data.append(Arr[list(Stars.keys())[i]][combin[i]])
-
-    total_text = []
-    total_values = []
-    for i in range(len(total_data)):
-        total_text.append(total_data[i][1])
-        total_values.append(total_data[i][0])
-
-    UK, IG = False, False
-    combin_abridged = list(combin)
-    if "uk" in str(combin_abridged[list(Stars.keys()).index("TTM")]):
-        UK = True
-        combin_abridged[list(Stars.keys()).index("TTM")]=str(combin_abridged[list(Stars.keys()).index("TTM")]).removesuffix("uk")
-    if "ig" in str(combin_abridged[list(Stars.keys()).index("SL")]):
-        IG = True
-        combin_abridged[list(Stars.keys()).index("SL")]=str(combin_abridged[list(Stars.keys()).index("SL")]).removesuffix("ig")
-    for x in range(len(combin_abridged)):
-        total += int(combin_abridged[x])
-
-    if total+40 == 70:
-        if int(combin[list(Stars.keys()).index("VCutM")]) == 0 and IG == False:
-            fail = True
-        else:
-            if sum(total_values) < bestnum:
-                bestnum = sum(total_values)
-                besttext = total_text
-                starTimes["Free"] = ["Unrestricted:", str(bestnum), str(besttext)]
-                export_results(starTimes["Free"], starfile)
-            mipscheck = 0
-            for name in ["BoB", "CCM", "WF", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD"]:
-                if name in list(Stars.keys()): mipscheck += int(combin_abridged[list(Stars.keys()).index(name)])
-            if 29+mipscheck>=50: # MIPS Restricted Routes
-                if UK == True: # (BitFS HOLP Routes)
-                    if sum(total_values) < bestbitfsholpnum:
-                        bestbitfsholpnum = sum(total_values)
-                        bestbitfsholptext = total_text
-                        starTimes["BitFS"] = ["BitFS HOLP:", str(bestbitfsholpnum), str(bestbitfsholptext)]
-                        export_results(starTimes["BitFS"], starfile)
-                else: # (Non-BitFS HOLP Routes)
-                    if sum(total_values) < bestmipsresnum:
-                        bestmipsresnum = sum(total_values)
-                        bestmipsrestext = total_text
-                        starTimes["MIPS"] = ["MIPS Restr.", str(bestmipsresnum), str(bestmipsrestext)]
-                        export_results(starTimes["MIPS"], starfile)
-            if "jetstream" in total_text[4]:
-                jetcheck = -1
-                detour = J
-            else:
-                jetcheck = 0
-                detour = 0
-            earlycheck = 0
-            for name in ["BoB", "WF", "JRB", "BBH"]:
-                if name in list(Stars.keys()): earlycheck += int(combin_abridged[list(Stars.keys()).index(name)])
-            if 16+jetcheck+earlycheck>=30: # Early DDD Routes
-                if (sum(total_values) + detour/30) < bestearlydddnum:
-                    bestearlydddnum = sum(total_values) + detour/30
-                    bestearlydddtext = total_text
-                    starTimes["DDD"] = ["Early DDD:", str(bestearlydddnum), str(bestearlydddtext)]
-                    export_results(starTimes["DDD"], starfile)
-    count = count + 1
-    if count >= upper:
-        print(count/1000000, "million", "//", 100*count/totals, "%")
-        upper += 50000
-
-downlist0 = [[bestbitfsholpnum, bestmipsresnum, bestearlydddnum, bestnum],[bestbitfsholptext, bestmipsrestext, bestearlydddtext, besttext]]
-
-# GET FINAL ROUTE DATA
-
-downlist3 = {} # List of final route times
-downlist4 = {} # List of course orders
-downlist5 = [] # List of castle route names
-downlist6 = {} # List of star selections
-downlist7 = {} # List of star cuts
-for i in range(len(downlist[0])):
-    for j in range(len(downlist[0][i][1])):
-        downlist5.append(str(str(downlist[0][i][0])+" "+str(downlist[1][downlist[0][i][1][j]][0]))) # Castle Route name e.g. WDW (Early DDD) Early DDD Late VC
-
-        summed = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + (float(starTimes[downlist[0][i][4]][1])*30) + downlist[1][downlist[0][i][1][j]][1])/30
-        downlist3[downlist5[-1]] = summed # Upstairs + HOLP + Stars + Castle
-        downlist4[downlist5[-1]] = ["BoB", "CCM", "WF"]
-
-        if downlist[1][downlist[0][i][1][j]][0] in ["Early DDD Early VC", "Early DDD Late VC"]: # Early JRB for Early DDD Routes
-            if alt == True: downlist4[downlist5[-1]].extend(["JRB", "BitDW", "PSS", "TotWC"])
-            elif alt == False: downlist4[downlist5[-1]].extend(["BitDW", "PSS", "TotWC", "JRB"])
-
-        for k in range(len(downlist[1][downlist[0][i][1][j]][2])):
-            downlist4[downlist5[-1]].append(downlist[1][downlist[0][i][1][j]][2][k]) # Downstairs 1
-
-        if downlist[1][downlist[0][i][1][j]][0] == "Original":
-            for k in range(0, len(text_list[num_list.index(downlist[0][i][2][j])])):
-                downlist4[downlist5[-1]].append(text_list[num_list.index(downlist[0][i][2][j])][k]) # Upstairs 1
-
-            downlist4[downlist5[-1]].append("BitS")
-        else:
-            for k in range(0, text_list[num_list.index(downlist[0][i][2][j])].index("Down")):
-                downlist4[downlist5[-1]].append(text_list[num_list.index(downlist[0][i][2][j])][k]) # Upstairs 1
-
-            for k in range(len(downlist[1][downlist[0][i][1][j]][3])):
-                downlist4[downlist5[-1]].append(downlist[1][downlist[0][i][1][j]][3][k]) # Downstairs 2
-
-            if downlist[1][downlist[0][i][1][j]][0] not in ["Classic", "Why", "Late VC", "Late HMC"]:
-                if "jetstream" in starTimes[downlist[0][i][4]][2][4]: downlist4[downlist5[-1]].append("JRB") # JRB 2
-
-            for k in range(text_list[num_list.index(downlist[0][i][2][j])].index("Down")+1, len(text_list[num_list.index(downlist[0][i][2][j])])):
-                downlist4[downlist5[-1]].append(text_list[num_list.index(downlist[0][i][2][j])][k]) # Upstairs 2
-
-            downlist4[downlist5[-1]].append("BitS")
-
-        downlist6[downlist5[-1]] = list(starTimes[downlist[0][i][4]][2]) # Star selection list, added to dictionary with most recently added castle route name as key
-        downlist7[downlist5[-1]] = []
-        for k in range(len(Stars)):
-            for l in range(len(list(Stars.values())[k])):
-                if list((list(Stars.values())[k]).keys())[l] not in set(downlist6[downlist5[-1]][k]): (downlist7[downlist5[-1]]).append(list((list(Stars.values())[k]).keys())[l]) # Star cuts list, same key as above
-
-# Traceback (most recent call last):
-#  File "c:\Users\64211\OneDrive - Shirley Boys High School\Documents\GitHub\seventyabcrouting\# Post-Arrangement TEST SCRIPT #.py", line 604, in <module>
-#    print("Route name:", downlist5[list(downlist3.values()).index(min(list(downlist3.values())))], "(", min(list(downlist3.values())), ")\n")
-# IndexError: list index out of range
-
-print_and_export([downlist3, "\n", downlist4, "\n", downlist7, "\n", downlist6], endfile) # Print all route info
-
-# BEST ROUTE SUMMARY
-
-print_and_export(["\nBest Route Info:\n"], endfile)
-print_and_export(["Route name:", downlist5[list(downlist3.values()).index(min(list(downlist3.values())))], "//", min(list(downlist3.values()))], endfile)
-print_and_export(["Course order:", list(downlist4.values())[list(downlist3.values()).index(min(list(downlist3.values())))]], endfile)
-print_and_export(["Stars cut:", list(downlist7.values())[list(downlist3.values()).index(min(list(downlist3.values())))]], endfile)
-print_and_export(["Stars collected:", list(downlist6.values())[list(downlist3.values()).index(min(list(downlist3.values())))]], endfile)
-
-#    print(downlist[0][i][0], ":") # 
-#    print(downlist3[downlist[0][i][0]])
-#    print(downlist4[downlist[0][i][0]])
-#    xx = 0
-#    yy = 0
-#    while xx < downlengths[-1]:
-#        if yy == i:
-#            for j in range(len(downlist[0][i][1])):
-#
-#        if xx == downlengths[yy]: yy += 1
-
-def getAllReentries():
-    for i in range(len(ReentrySplits)):
-        print(list(ReentrySplits.keys())[i], ":", round(reentryTime(list(ReentrySplits.keys())[i])/30, 2))
-    print("BBH :", round(reentryTime("BBH")/30, 2))
