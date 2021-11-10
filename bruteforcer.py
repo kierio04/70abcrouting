@@ -351,7 +351,7 @@ MovementTimes = {
     "Jd": 61, # exit JRB door (used to be 7)
     "Je": 80, # cotmc timestop (used to be 8)
     "Jf": 176, # JRB to up (used to be U)
-    "Jg": 64, # JRB to door to downstairs (used to be W)
+    "Jg": 64+51, # JRB to door to downstairs (used to be W)
     "Jh": reentryTime("JRB"), # JRB reentry
 
     "0": 144, # up to upstairs (staircase)
@@ -377,9 +377,21 @@ Y = float((m["A"]+m["Da"]+m["Pd"])-(m["Pb"]+m["Dc"]+m["Db"])) # EARLY VC ON EARL
 J = float((m["Ee"]+m["Ja"]+m["Jb"]+m["Jc"]+m["Jd"]+m["Jf"])-(m["Ea"]+m["Jh"])) # JETSTREAM DETOUR ON EARLY DDD
 Z = float((m["Q"]+m["R"]+m["Ec"])-(m["X"]+m["Ed"]+m["Jg"])) # ALTERNATE LOBBY REROUTE ON EARLY DDD
 
-if Z<=0: alt = True
+print("Classic vs Original:", A)
+print("Why vs Classic:", B)
+print("Late VC vs Classic:", C)
+print("Late HMC vs Late VC:", D)
+print("Early DDD Base:", X)
+print("Early VC on Early DDD:", Y)
+print("Jetstream Detour on Early DDD:", J)
+print("Alternate Lobby Reroute on Early DDD:", Z)
+
+if Z<=0:
+    alt = True
+    "Reroute happens"
 else: 
     alt = False
+    "Reroute canceled"
     Z = 0
 
 # GET DOWNSTAIRS MOVEMENTS
@@ -418,7 +430,10 @@ for i in range(len(downlist[0])):
     downlist2[downlist[0][i][0]] = {}
     for j in range(len(downlist[0][i][1])):
         downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1])/30 # Upstairs + HOLP + Castle
-    print_and_export([downlist[0][i][0], downlist2[downlist[0][i][0]]], endfile)
+    print(downlist[0][i][0], downlist2[downlist[0][i][0]])
+    # print_and_export([downlist[0][i][0], downlist2[downlist[0][i][0]]], endfile)
+
+# downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1]
 
 # Bob-omb Battlefield
 
@@ -659,7 +674,7 @@ bestbitfsholpnum = 99999
 bestmipsresnum = 99999
 bestearlydddnum = 99999
 count = 0
-upper = 500000
+upper = 1000000
 
 for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], Arr["JRB"], Arr["BBH"], Arr["DDD"], Arr["VCutM"], Arr["BitFS"], Arr["WDW"], Arr["THI"], Arr["TTM"], Arr["SL"]):
     total = 0
@@ -728,9 +743,11 @@ for combin in itertools.product(Arr["BoB"], Arr["WF"], Arr["SSL"], Arr["HMC"], A
     count = count + 1
     if count >= upper:
         print(count/1000000, "million", "//", 100*count/totals, "%")
-        upper += 50000
+        upper += 1000000
 
 downlist0 = [[bestbitfsholpnum, bestmipsresnum, bestearlydddnum, bestnum],[bestbitfsholptext, bestmipsrestext, bestearlydddtext, besttext]]
+
+print(downlist0)
 
 # GET FINAL ROUTE DATA
 

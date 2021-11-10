@@ -386,6 +386,9 @@ downlist = [
     ]
 ]
 
+for i in range(len(downlist[1])):
+    print(downlist[1][i][1]/30)
+
 downlengths = [0]
 dlen = 0
 for i in range(len(downlist[0])):
@@ -524,3 +527,18 @@ starTimes = {
     "DDD": ["Early DDD:", 1943.37, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), (), ('metalcap', 'metalhead'), ('sunkenship', 'eelplay'), ('ghosthunt', 'hauntedbooks', 'bbhreds', 'BBH100'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'quickrace', 'secrets', 'WDW100'), (), ('monkeycage', 'ttmreds', 'TTM100'), ('slreds', 'intoigloo', 'SL100', 'bighead')]],
     "Free": ["Unrestricted:", 1926.15, [('koopathequick', 'chainchomp', 'island', 'bobreds', 'BoB100'), ('tower', 'wfreds', 'WF100'), ('standtall',), ('metalcap', 'metalhead'), ('sunkenship', 'eelplay', 'jetstream'), ('ghosthunt', 'hauntedbooks'), ('chests',), ('vanishcap',), (), ('topoftown', 'express', 'quickrace', 'secrets', 'WDW100'), (), ('monkeycage', 'ttmreds', 'TTM100'), ('slreds', 'intoigloo', 'SL100', 'bighead')]]
 }
+
+downlengths = [0]
+dlen = 0
+for i in range(len(downlist[0])):
+    dlen += len(downlist[0][i][1])
+    downlengths.append(dlen)
+
+print(downlengths)
+
+downlist2 = {}
+for i in range(len(downlist[0])):
+    downlist2[downlist[0][i][0]] = {}
+    for j in range(len(downlist[0][i][1])):
+        downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = (downlist[1][downlist[0][i][1][j]][1])/30 # Upstairs + HOLP + Castle
+    print([downlist[0][i][0], downlist2[downlist[0][i][0]]])
