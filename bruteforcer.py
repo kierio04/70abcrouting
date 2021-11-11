@@ -311,8 +311,8 @@ def holpTime(course):
 
 # a = (Pb/Ea+Eb/I/J)-(A/B)
 # b = (Ma+Pc)-(Dd+Md+Pax)
-# c = (Pd+Mb)-(Dc/Db+Mc)
-# d = (Me+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
+# c = (Pd+Mb/Db)-(Dc/Db+Mc)
+# d = (Me/Db+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
 # x = (Ed)-(Ec/I/J/Dd+Ee+Pax)
 # y = (A/Da+Pd)-(Pb+Dc/Db)
 # j = (Ee/Ja/Jb+Jc/Jd/Jf)-(Ea+Jh)
@@ -335,7 +335,7 @@ MovementTimes = {
     "Pd": pauseexitTime("HMC"), # HMC reentry and pause exit (used to be M)
 
     "Da": 79+765, # 30 star door to VCutM door (used to be T)
-    "Db": 727, # pillar door to VCutM door (used to be part of 1)
+    "Db": 51+727, # pillar door to VCutM door (used to be part of 1)
     "Dc": 242, # HMC to pillar door (used to be part of 1)
     "Dd": 138, # MIPS room door to LLL (used to be Y)
 
@@ -368,30 +368,32 @@ MovementTimes = {
 
 m = MovementTimes
 
+O = float((0-m["0"])) # ORIGINAL
 A = float((m["Pb"]+m["Ea"]+m["Eb"]+m["I"]+m["J"])-(m["A"]+m["B"])) # CLASSIC VS ORIGINAL
 B = float((m["Ma"]+m["Pc"])-(m["Dd"]+m["Md"]+m["Pax"])) # WHY VS CLASSIC
-C = float((m["Pd"]+m["Mb"])-(m["Dc"]+m["Db"]+m["Mc"])) # LATE VC VS CLASSIC
-D = float((m["Me"]+m["Eb"]+m["Ma"]+m["Jf"])-(m["Md"]+m["Jg"]+m["Mb"]+m["Ea"])) # LATE HMC VS LATE VC
+C = float((m["Pd"]+m["Mb"])-(m["Dc"]+m["Mc"])) # LATE VC VS CLASSIC (two Mb's cancel out)
+D = float((m["Me"]+m["Db"]+m["Eb"]+m["Ma"]+m["Jf"])-(m["Md"]+m["Jg"]+m["Mb"]+m["Ea"])) # LATE HMC VS LATE VC
 X = float((m["Ed"])-(m["Ec"]+m["I"]+m["J"]+m["Dd"]+m["Ee"]+m["Pax"])) # EARLY DDD BASE
 Y = float((m["A"]+m["Da"]+m["Pd"])-(m["Pb"]+m["Dc"]+m["Db"])) # EARLY VC ON EARLY DDD
 J = float((m["Ee"]+m["Ja"]+m["Jb"]+m["Jc"]+m["Jd"]+m["Jf"])-(m["Ea"]+m["Jh"])) # JETSTREAM DETOUR ON EARLY DDD
 Z = float((m["Q"]+m["R"]+m["Ec"])-(m["X"]+m["Ed"]+m["Jg"])) # ALTERNATE LOBBY REROUTE ON EARLY DDD
 
-print("Classic vs Original:", A)
-print("Why vs Classic:", B)
-print("Late VC vs Classic:", C)
-print("Late HMC vs Late VC:", D)
-print("Early DDD Base:", X)
-print("Early VC on Early DDD:", Y)
-print("Jetstream Detour on Early DDD:", J)
-print("Alternate Lobby Reroute on Early DDD:", Z)
+print("Original Base", O, "//", round(O/30, 2))
+print("Classic vs Original:", A, "//", round(A/30, 2))
+print("Why vs Classic:", B, "//", round(B/30, 2))
+print("Late VC vs Classic:", C, "//", round(C/30, 2))
+print("Late HMC vs Late VC:", D, "//", round(D/30, 2))
+print("Early DDD Base:", X, "//", round(X/30, 2))
+print("Early VC on Early DDD:", Y, "//", round(Y/30, 2))
+print("Jetstream Detour on Early DDD:", J, "//", round(J/30, 2))
+print("Alternate Lobby Reroute on Early DDD:", Z, "//", round(Z/30, 2))
 
 if Z<=0:
     alt = True
-    "Reroute happens"
+    print("Reroute happens")
 else: 
     alt = False
-    "Reroute canceled"
+    print("Reroute cancelled")
     Z = 0
 
 # GET DOWNSTAIRS MOVEMENTS

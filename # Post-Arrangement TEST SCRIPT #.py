@@ -1,6 +1,9 @@
 import itertools
 from typing import OrderedDict
 
+starfile = "seventyabcexport.txt"
+endfile = "finalresultsexport.txt"
+
 ReentryStats = {
     "Out": 300.5, # Star dance to first movement
     "Enter": 74, # Disappeared to first full white
@@ -116,8 +119,24 @@ PaintingToPainting = {
 def upstairs(a,b):
     return PaintingToPainting[a][b]
 
+def ListToString(list):
+    for i in range(len(list)):
+        list[i] = str(list[i])
+
+def export_results(etext, file_name):
+        export = open(file_name, "a")
+        export.writelines(etext)
+        export.write("\n")
+        export.close()
+
+def print_and_export(elist, file_name):
+    ListToString(elist)
+    for i in range(len(elist)):
+        print(elist[i])
+    export_results(elist, file_name)
+
 def upstairs_result(text, textlist, numlist):
-    print(text, min(numlist),textlist[numlist.index(min(list(numlist)))])
+    print_and_export([text, min(numlist),textlist[numlist.index(min(list(numlist)))]], endfile)
 
 uplist = ["Down", "WDW1", "WDW2", "WDW3", "SL", "TTM", "T2"] # 1 and 3 WDW
 uplist2 = ["Down", "SL", "TTM", "T2"] # 0 WDW
@@ -292,8 +311,8 @@ def holpTime(course):
 
 # a = (Pb/Ea+Eb/I/J)-(A/B)
 # b = (Ma+Pc)-(Dd+Md+Pax)
-# c = (Pd+Mb)-(Dc/Db+Mc)
-# d = (Me+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
+# c = (Pd+Mb/Db)-(Dc/Db+Mc)
+# d = (Me/Db+Eb+Ma+Jf)-(Md+Jg+Mb+Ea)
 # x = (Ed)-(Ec/I/J/Dd+Ee+Pax)
 # y = (A/Da+Pd)-(Pb+Dc/Db)
 # j = (Ee/Ja/Jb+Jc/Jd/Jf)-(Ea+Jh)
@@ -316,7 +335,7 @@ MovementTimes = {
     "Pd": pauseexitTime("HMC"), # HMC reentry and pause exit (used to be M)
 
     "Da": 79+765, # 30 star door to VCutM door (used to be T)
-    "Db": 727, # pillar door to VCutM door (used to be part of 1)
+    "Db": 51+727, # pillar door to VCutM door (used to be part of 1)
     "Dc": 242, # HMC to pillar door (used to be part of 1)
     "Dd": 138, # MIPS room door to LLL (used to be Y)
 
@@ -332,7 +351,7 @@ MovementTimes = {
     "Jd": 61, # exit JRB door (used to be 7)
     "Je": 80, # cotmc timestop (used to be 8)
     "Jf": 176, # JRB to up (used to be U)
-    "Jg": 64, # JRB to door to downstairs (used to be W)
+    "Jg": 64+51, # JRB to door to downstairs (used to be W)
     "Jh": reentryTime("JRB"), # JRB reentry
 
     "0": 144, # up to upstairs (staircase)
@@ -349,18 +368,32 @@ MovementTimes = {
 
 m = MovementTimes
 
+O = float((0-m["0"])) # ORIGINAL
 A = float((m["Pb"]+m["Ea"]+m["Eb"]+m["I"]+m["J"])-(m["A"]+m["B"])) # CLASSIC VS ORIGINAL
 B = float((m["Ma"]+m["Pc"])-(m["Dd"]+m["Md"]+m["Pax"])) # WHY VS CLASSIC
-C = float((m["Pd"]+m["Mb"])-(m["Dc"]+m["Db"]+m["Mc"])) # LATE VC VS CLASSIC
-D = float((m["Me"]+m["Eb"]+m["Ma"]+m["Jf"])-(m["Md"]+m["Jg"]+m["Mb"]+m["Ea"])) # LATE HMC VS LATE VC
+C = float((m["Pd"]+m["Mb"])-(m["Dc"]+m["Mc"])) # LATE VC VS CLASSIC (two Mb's cancel out)
+D = float((m["Me"]+m["Db"]+m["Eb"]+m["Ma"]+m["Jf"])-(m["Md"]+m["Jg"]+m["Mb"]+m["Ea"])) # LATE HMC VS LATE VC
 X = float((m["Ed"])-(m["Ec"]+m["I"]+m["J"]+m["Dd"]+m["Ee"]+m["Pax"])) # EARLY DDD BASE
 Y = float((m["A"]+m["Da"]+m["Pd"])-(m["Pb"]+m["Dc"]+m["Db"])) # EARLY VC ON EARLY DDD
 J = float((m["Ee"]+m["Ja"]+m["Jb"]+m["Jc"]+m["Jd"]+m["Jf"])-(m["Ea"]+m["Jh"])) # JETSTREAM DETOUR ON EARLY DDD
 Z = float((m["Q"]+m["R"]+m["Ec"])-(m["X"]+m["Ed"]+m["Jg"])) # ALTERNATE LOBBY REROUTE ON EARLY DDD
 
-if Z<=0: alt = True
+print("Original Base", O, "//", round(O/30, 2))
+print("Classic vs Original:", A, "//", round(A/30, 2))
+print("Why vs Classic:", B, "//", round(B/30, 2))
+print("Late VC vs Classic:", C, "//", round(C/30, 2))
+print("Late HMC vs Late VC:", D, "//", round(D/30, 2))
+print("Early DDD Base:", X, "//", round(X/30, 2))
+print("Early VC on Early DDD:", Y, "//", round(Y/30, 2))
+print("Jetstream Detour on Early DDD:", J, "//", round(J/30, 2))
+print("Alternate Lobby Reroute on Early DDD:", Z, "//", round(Z/30, 2))
+
+if Z<=0:
+    alt = True
+    print("Reroute happens")
 else: 
     alt = False
+    print("Reroute cancelled")
     Z = 0
 
 # GET DOWNSTAIRS MOVEMENTS
@@ -376,7 +409,7 @@ downlist = [
         ["No Preset (No DDD early)", [2, 3, 4], [min(num_list[3], num_list[7], num_list[11]), min(num_list[6], num_list[10], num_list[14]), min(num_list[3], num_list[7], num_list[11])], "BitS", "Free"]
     ],
     [
-        ["Original", 0, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS", "MIPS"]],
+        ["Original", O, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS", "MIPS"]],
         ["Classic", A, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS"]],
         ["Why", A+B, ["BitDW", "PSS", "TotWC", "HMC", "VCutM", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL"]],
         ["Late VC", A+C, ["BitDW", "PSS", "TotWC", "LLL", "SSL", "HMC", "JRB", "BBH", "DDD", "BitFS"], ["MIPS", "VCutM"]],
@@ -385,9 +418,6 @@ downlist = [
         ["Early DDD Late VC", A+X+Z, ["BBH", "DDD", "BitFS"], ["MIPS", "LLL", "SSL", "HMC", "VCutM"]]
     ]
 ]
-
-for i in range(len(downlist[1])):
-    print(downlist[1][i][1]/30)
 
 downlengths = [0]
 dlen = 0
@@ -403,7 +433,9 @@ for i in range(len(downlist[0])):
     for j in range(len(downlist[0][i][1])):
         downlist2[downlist[0][i][0]][downlist[1][downlist[0][i][1][j]][0]] = (downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1])/30 # Upstairs + HOLP + Castle
     print(downlist[0][i][0], downlist2[downlist[0][i][0]])
-print("")
+    # print_and_export([downlist[0][i][0], downlist2[downlist[0][i][0]]], endfile)
+
+# downlist[0][i][2][j] + holpTime(downlist[0][i][3]) + downlist[1][downlist[0][i][1][j]][1]
 
 # Bob-omb Battlefield
 
