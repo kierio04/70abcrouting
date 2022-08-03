@@ -100,7 +100,7 @@ SLTimes = {
     "WDW2": (74+138),
     "WDW3": (74+138),
     "TTM": (78+138),
-    "T2": (165+138),
+    "T2": (99+138),
     "SL": ReentrySplits["SL"],
     "50": (130+138),
     "Down": pauseexitTime("SL"),
